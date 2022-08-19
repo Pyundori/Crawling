@@ -1,1 +1,1 @@
-worker: python main.py --timeout=1200
+worker: python main.py --timeout=1200 --preload

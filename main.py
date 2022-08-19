@@ -1,4 +1,5 @@
 import src
+import json
 
 PAGE_LIST = {
     'seven_eleven': 'https://www.7-eleven.co.kr/product/listMoreAjax.asp',
@@ -10,20 +11,20 @@ PAGE_LIST = {
 # main function
 def main():
     seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"]) # 완료
-    # with open("seven_eleven.json", "w", encoding='utf-8') as f:
-    #     f.write(json.dumps(seven_eleven, ensure_ascii=False))
+    with open("test_json/even_eleven.json", "w", encoding='utf-8') as f:
+        f.write(json.dumps(seven_eleven, ensure_ascii=False))
 
     gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"]) # 완료
-    # with open("gs25.json", "w", encoding='utf-8') as f:
-    #     f.write(json.dumps(gs25, ensure_ascii=False))
+    with open("test_json/gs25.json", "w", encoding='utf-8') as f:
+        f.write(json.dumps(gs25, ensure_ascii=False))
 
     emart24 = src.GETRequestAPI_Emart24(PAGE_LIST['emart24']) # 완료
-    # with open("emart24.json", "w", encoding='utf-8') as f:
-    #     f.write(json.dumps(emart24, ensure_ascii=False))
+    with open("test_json/emart24.json", "w", encoding='utf-8') as f:
+        f.write(json.dumps(emart24, ensure_ascii=False))
 
     cu = src.POSTRequestAPI_Cu(PAGE_LIST['cu']) # 완료
-    # with open("cu.json", "w", encoding='utf-8') as f:
-    #     f.write(json.dumps(cu, ensure_ascii=False))
+    with open("test_json/cu.json", "w", encoding='utf-8') as f:
+        f.write(json.dumps(cu, ensure_ascii=False))
 
     None
  

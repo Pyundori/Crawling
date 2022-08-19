@@ -1,8 +1,8 @@
 import src
 import json
-from flask import Flask
+# from flask import Flask
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 PAGE_LIST = {
     'seven_eleven': 'https://www.7-eleven.co.kr/product/listMoreAjax.asp',
@@ -11,12 +11,12 @@ PAGE_LIST = {
     'cu': 'https://cu.bgfretail.com/event/plusAjax.do',
 }
 
-@app.route("/")
-def main():
-    return "Hello!"
+# @app.route("/")
+# def main():
+#     return "Hello!"
 
 # main function
-@app.route("/crawling")
+# @app.route("/crawling")
 def crawling():
     seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"]) # 완료
     # with open("test_json/even_eleven.json", "w", encoding='utf-8') as f:
@@ -38,5 +38,5 @@ def crawling():
     
     None
  
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+# if __name__ == '__main__':
+#     app.run(host="0.0.0.0", port=5000, debug=True)

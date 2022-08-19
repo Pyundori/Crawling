@@ -1,1 +1,1 @@
-web: gunicorn --workers=2 src.database.main:app --bind 0.0.0.0:${PORT}
+web: gunicorn --workers=2 main:app --bind 0.0.0.0:${PORT} --timeout 60

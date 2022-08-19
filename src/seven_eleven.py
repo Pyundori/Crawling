@@ -17,7 +17,6 @@ def POSTRequestAPI_SevenEleven(url):
         i = 0
         tabs = {}
         while True:
-            print(pTab, legend, i)
             response = requests.post(url, data={
                 "intPageSize": 10, 
                 "intCurrPage":i, 

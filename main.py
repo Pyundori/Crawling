@@ -1,6 +1,4 @@
 import src
-import json
-import requests
 from flask import Flask
 import pymysql as mysql
 
@@ -47,29 +45,57 @@ def main():
 @app.route("/seven_eleven")
 def seven_eleven():
     seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"])
-    table, datas = src.makeTable(seven_eleven)
+    table = src.makeTable(seven_eleven)
+
     return "".join(table)
 
 @app.route("/emart24")
 def emart24():
     emart24 = src.GETRequestAPI_Emart24(PAGE_LIST['emart24'])
-    table, datas = src.makeTable(emart24)
+    table = src.makeTable(emart24)
+
     return "".join(table)
 
 @app.route("/cu")
 def cu():
     cu = src.POSTRequestAPI_Cu(PAGE_LIST['cu'])
-    table, datas = src.makeTable(cu)
+    table = src.makeTable(cu)
+
     return "".join(table)
 
 @app.route("/gs25")
 def crawling():
     gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"])
-    table, datas = src.makeTable(gs25)
-
-    src.pushDataToDB(sql_conn, datas)
+    table = src.makeTable(gs25)
 
     return "".join(table)
+
+@app.route("/to_db") # 테스트 필요
+def toDB():
+    start = time.time()
+    gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"])
+    gs25 = src.makeSQLDatas(gs25, "gs25")
+    print('gs25 end', time.time() - start)
+
+    start = time.time()
+    cu = src.POSTRequestAPI_Cu(PAGE_LIST['cu'])
+    cu = src.makeSQLDatas(cu, "cu")
+    print('cu end', time.time() - start)
+
+    start = time.time()
+    emart24 = src.GETRequestAPI_Emart24(PAGE_LIST['emart24'])
+    emart24 = src.makeSQLDatas(emart24, "emart24")
+    print('emart24 end', time.time() - start)
+
+    start = time.time()
+    seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"])
+    seven_eleven = src.makeSQLDatas(seven_eleven, "seven_eleven")
+    print('seven_eleven end', time.time() - start)
+
+    datas = gs25 + cu + emart24 + seven_eleven
+    src.pushDataToDB(sql_conn, datas)
+
+    return ""
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

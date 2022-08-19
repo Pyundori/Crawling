@@ -1,9 +1,10 @@
 import src
 import json
-# from flask import Flask
-# import os
+import requests
+from flask import Flask
+import os
 
-# app = Flask(__name__)
+app = Flask(__name__)
 
 PAGE_LIST = {
     'seven_eleven': 'https://www.7-eleven.co.kr/product/listMoreAjax.asp',
@@ -17,33 +18,40 @@ PAGE_LIST = {
 #     return "Hello!"
 
 # main function
-# @app.route("/crawling")
+@app.route("/crawling")
 def crawling():
+    response = requests.post('https://www.7-eleven.co.kr/product/listMoreAjax.asp', data={
+        "intPageSize": 1, 
+        "intCurrPage":1, 
+        "cateCd1":"", 
+        "cateCd2":"", 
+        "cateCd3":"", 
+        "pTab":1
+    }).text
+
+    return response
     # seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"]) # 완료
     # # with open("test_json/even_eleven.json", "w", encoding='utf-8') as f:
     # #     f.write(json.dumps(seven_eleven, ensure_ascii=False))
     # return json.dumps(seven_eleven, ensure_ascii=False)
 
-    gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"]) # 완료
-    # with open("test_json/gs25.json", "w", encoding='utf-8') as f:
-    #     f.write(json.dumps(gs25, ensure_ascii=False))
-    return json.dumps(gs25, ensure_ascii=False)
+    # gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"]) # 완료
+    # # with open("test_json/gs25.json", "w", encoding='utf-8') as f:
+    # #     f.write(json.dumps(gs25, ensure_ascii=False))
+    # return json.dumps(gs25, ensure_ascii=False)
 
-    emart24 = src.GETRequestAPI_Emart24(PAGE_LIST['emart24']) # 완료
-    # with open("test_json/emart24.json", "w", encoding='utf-8') as f:
-    #     f.write(json.dumps(emart24, ensure_ascii=False))
-    return json.dumps(emart24, ensure_ascii=False)
+    # emart24 = src.GETRequestAPI_Emart24(PAGE_LIST['emart24']) # 완료
+    # # with open("test_json/emart24.json", "w", encoding='utf-8') as f:
+    # #     f.write(json.dumps(emart24, ensure_ascii=False))
+    # return json.dumps(emart24, ensure_ascii=False)
 
-    cu = src.POSTRequestAPI_Cu(PAGE_LIST['cu']) # 완료
-    # with open("test_json/cu.json", "w", encoding='utf-8') as f:
-    #     f.write(json.dumps(cu, ensure_ascii=False))
-    return json.dumps(cu, ensure_ascii=False)
-
-    
-    None
+    # cu = src.POSTRequestAPI_Cu(PAGE_LIST['cu']) # 완료
+    # # with open("test_json/cu.json", "w", encoding='utf-8') as f:
+    # #     f.write(json.dumps(cu, ensure_ascii=False))
+    # return json.dumps(cu, ensure_ascii=False)
  
 
 if __name__ == '__main__':
-    # port = int(os.environ.get('PORT', 5000))
-    # app.run(host="0.0.0.0", port=port, debug=True)
-    crawling()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
+    # crawling()

@@ -21,7 +21,7 @@ def crawling():
     seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"]) # 완료
     # with open("test_json/even_eleven.json", "w", encoding='utf-8') as f:
     #     f.write(json.dumps(seven_eleven, ensure_ascii=False))
-    return seven_eleven
+    return json.dumps(seven_eleven, ensure_ascii=False)
 
     gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"]) # 완료
     # with open("test_json/gs25.json", "w", encoding='utf-8') as f:

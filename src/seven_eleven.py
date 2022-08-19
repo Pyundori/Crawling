@@ -16,6 +16,7 @@ def POSTRequestAPI_SevenEleven(url):
     for pTab, legend in enumerate(['1N1', '2N1', 'GIFT', 'SALE']):
         i = 0
         tabs = {}
+        print(pTab, legend)
         while True:
             response = requests.post(url, data={
                 "intPageSize": 10, 

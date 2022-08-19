@@ -45,12 +45,13 @@ def GETRequestAPI_Emart24(url):
             body = soup.select_one('.tabContArea ul.categoryListNew')
 
             for li in body.select('li'):
+                gift = None
                 product_name = li.select_one('.productDiv').text
                 product_price = li.select_one('.price').text.split('\xa0')[0]
                 product_price = int(re.sub('[,.]', '', product_price))
                 product_img = img_path + li.select_one('.productImg img')['src']
 
-                tabs[product_name] = {'price': product_price, 'img': product_img}
+                tabs[product_name] = {'price': product_price, 'img': product_img, 'gift': gift}
 
         cate = cate.replace("n", "N").replace("X2", "GIFT")
         datas[cate] = tabs

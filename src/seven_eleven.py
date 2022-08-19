@@ -32,14 +32,15 @@ def POSTRequestAPI_SevenEleven(url):
                 break
 
             for li_item in soup.select("li"):
+                gift = None
                 try:
                     product_data = li_item.select(".pic_product")[0]
                     product_name = product_data.select(".name")[0].text
-                    product_cost = product_data.select(".price")[0].select("span")[0].text.replace(",", "")
-                    product_cost = int(product_cost)
+                    product_price = product_data.select(".price")[0].select("span")[0].text.replace(",", "")
+                    product_price = int(product_price)
                     product_img = "https://www.7-eleven.co.kr" + product_data.select(".pic_product")[0].find("img")['src']
 
-                    tabs[product_name] = {'cost': product_cost, 'img': product_img}
+                    tabs[product_name] = {'price': product_price, 'img': product_img, 'gift': gift}
                     
                 except:
                     None

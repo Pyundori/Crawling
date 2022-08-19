@@ -92,8 +92,10 @@ def toDB():
     seven_eleven = src.makeSQLDatas(seven_eleven, "seven_eleven")
     print('seven_eleven end', time.time() - start)
 
+    start = time.time()
     datas = gs25 + cu + emart24 + seven_eleven
     src.pushDataToDB(sql_conn, datas)
+    print('db end', time.time() - start)
 
     return ""
 

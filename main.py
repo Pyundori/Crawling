@@ -10,7 +10,11 @@ PAGE_LIST = {
     'emart24': 'https://www.emart24.co.kr/product/eventProduct.asp',
     'cu': 'https://cu.bgfretail.com/event/plusAjax.do',
 }
-        
+
+@app.route("/")
+def main():
+    return "Hello!"
+
 # main function
 @app.route("/crawling")
 def crawling():

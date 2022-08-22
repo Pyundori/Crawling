@@ -1,13 +1,17 @@
 from src import *
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 def SQLConnection(sql_conn):
     sql_conn = sql_conn.connect(
-            host        ='localhost',   # 루프백주소, 자기자신주소
-            user        ='test',        # DB ID      
-            password    ='mysql123',    # 사용자가 지정한 비밀번호
-            database    ='crawling',
-            charset     ='utf8',
+            host        = os.environ.get('DB_HOST'),   # 루프백주소, 자기자신주소
+            user        = os.environ.get('DB_USER'),        # DB ID      
+            password    = os.environ.get('DB_PW'),    # 사용자가 지정한 비밀번호
+            database    = 'crawling',
+            charset     = 'utf8',
             # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
         )
     return sql_conn

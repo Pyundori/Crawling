@@ -13,30 +13,20 @@ def SQLConnection(sql_conn):
     return sql_conn
 
 def toDatabase(sql_conn):
-    start = time.time()
     gs25 = GETRequestAPI_Gs25(PAGE_LIST["gs25"])
     gs25 = makeSQLDatas(gs25, "gs25")
-    print('gs25 end', time.time() - start, len(gs25))
 
-    start = time.time()
     cu = POSTRequestAPI_Cu(PAGE_LIST['cu'])
     cu = makeSQLDatas(cu, "cu")
-    print('cu end', time.time() - start, len(cu))
 
-    start = time.time()
     emart24 = GETRequestAPI_Emart24(PAGE_LIST['emart24'])
     emart24 = makeSQLDatas(emart24, "emart24")
-    print('emart24 end', time.time() - start, len(emart24))
 
-    start = time.time()
     seven_eleven = POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"])
-    seven_eleven = makeSQLDatas(seven_eleven, "seven_eleven")
-    print('seven_eleven end', time.time() - start, len(seven_eleven))
+    seven_eleven = makeSQLDatas(seven_eleven, "seven_eleven") 
 
-    start = time.time()
     datas = gs25 + cu + emart24 + seven_eleven
     pushDataToDB(sql_conn, datas)
-    print('db end', time.time() - start, len(datas))
 
 def pushDataToDB(sql_conn, datas):
     sql_conn = SQLConnection(sql_conn)
@@ -73,8 +63,31 @@ def pushDataToDB(sql_conn, datas):
     
     sql_conn.close()
 
-def makeVenderSQLQuery(vender):
-    return f"SELECT vender as V, pType as T, pName, pPrice, pImg, gName, gPrice, gImg FROM crawledData WHERE vender='{vender}';"
+def makeVenderSQLQuery(venders=[], products=[]):
+    sql_query_type = ""
+    sql_query_product = ""
+    
+    
+    # vender case:
+
+    vender_list = []
+    if len(venders) > 0:
+        for vender in venders:
+            vender_list.append(f"vender='{vender}'")
+
+    vender_list_query = " OR ".join(vender_list)
+    
+    sql_query_vender = "SELECT vender as V, pType as T, pName, pPrice, pImg, gName, gPrice, gImg FROM crawledData"
+
+    # product_name case:
+
+    product_list = []
+    if len(products) > 0:
+        for product in products:
+            vender_list.append(f"vender='{product}'")
+
+
+    return sql_query
 
 def makeTableFromDB(datas):
     thead = initThead()
@@ -128,13 +141,11 @@ def initThead():
 
     return thead
 
-def setTbodyTag(tag, dat):
-    return f"<{tag}>{dat}</{tag}>"
-
 def GETVenderDataFromDB(sql_conn, vender):
     sql_conn = SQLConnection(sql_conn)
 
-    sql_query = makeVenderSQLQuery(vender)
+    sql_query = f"SELECT vender as V, pType as T, pName, pPrice, pImg, gName, gPrice, gImg FROM crawledData where vender='{vender}'"
+    #sql_query = makeVenderSQLQuery(vender)
     
     sql = sql_conn.cursor()
     sql.execute(sql_query)

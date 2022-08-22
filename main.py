@@ -1,29 +1,52 @@
 import src
 from flask import Flask
 import pymysql as mysql
+from flask import request
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
 sql_conn = mysql
 
 
+def make_link(links):
+    ret_links = ""
+    for link in links:
+        ret_links += f"<a href='{link}'    target='_self' style='display:block'>{link}</a>"
+    return ret_links
+
 @app.route("/")
 def main():
     body = []
-    body.append("<a href='seven_eleven'    target='_self' style='display:block'>seven_eleven</a>")
-    body.append("<a href='emart24'         target='_self' style='display:block'>emart24</a>")
-    body.append("<a href='cu'              target='_self' style='display:block'>cu</a>")
-    body.append("<a href='gs25'            target='_self' style='display:block'>gs25</a>")
+
+    from_server = ["seven_eleven", "emart24", "cu", "gs25"]
+    from_db = ["seven_eleven/fromdb", "emart24/fromdb", "cu/fromdb", "gs25/fromdb"]
+    from_db_make_table = ["seven_eleven/fromdb/table", "emart24/fromdb/table", "cu/fromdb/table", "gs25/fromdb/table"]
+    from_db_select_query = ["test_sql_query"]
+    from_db_select_query_table = ["test_sql_query/table"]
+
+    body.append(make_link(from_server))
     body.append("<hr/>")
-    body.append("<a href='seven_eleven/fromdb'  target='_self' style='display:block'>seven_eleven_from_db</a>")
-    body.append("<a href='emart24/fromdb'       target='_self' style='display:block'>emart24_from_db</a>")
-    body.append("<a href='cu/fromdb'            target='_self' style='display:block'>cu_from_db</a>")
-    body.append("<a href='gs25/fromdb'          target='_self' style='display:block'>gs25_from_db</a>")
+    body.append(make_link(from_db))
     body.append("<hr/>")
-    body.append("<a href='seven_eleven/fromdb/table'  target='_self' style='display:block'>seven_eleven_from_db_table</a>")
-    body.append("<a href='emart24/fromdb/table'       target='_self' style='display:block'>emart24_from_db_table</a>")
-    body.append("<a href='cu/fromdb/table'            target='_self' style='display:block'>cu_from_db_table</a>")
-    body.append("<a href='gs25/fromdb/table'          target='_self' style='display:block'>gs25_from_db_table</a>")
+    body.append(make_link(from_db_make_table))
+    body.append("<hr/>")
+    body.append(make_link(from_db_select_query))
+
+
+    form = "<form action='/test_sql_query' methos='post'>\
+        <p>판매점<input type='text' name='venders'></p>\
+        <p>할인타입<input type='text' name='dtypes'></p>\
+        <p>상품이름<input type='text' name='products'></p>\
+        <p><input type='submit' value='제출'></p>\
+        </form>"
+    body.append(form)
+
+    body.append("<hr/>")
+
+    body.append("<hr/>")
+    body.append(make_link(['test']))
+
 
     html = "<!DOCTYPE HTML>"
     html += "<html>"
@@ -36,34 +59,6 @@ def main():
     html += "</html>"
 
     return f"""{html}"""
-
-# @app.route("/seven_eleven")
-# def seven_eleven():
-#     seven_eleven = src.POSTRequestAPI_SevenEleven(src.PAGE_LIST["seven_eleven"])
-#     table = src.makeTable(seven_eleven)
-
-#     return "".join(table)
-
-# @app.route("/emart24")
-# def emart24():
-#     emart24 = src.GETRequestAPI_Emart24(src.PAGE_LIST['emart24'])
-#     table = src.makeTable(emart24)
-
-#     return "".join(table)
-
-# @app.route("/cu")
-# def cu():
-#     cu = src.POSTRequestAPI_Cu(src.PAGE_LIST['cu'])
-#     table = src.makeTable(cu)
-
-#     return "".join(table)
-
-# @app.route("/gs25")
-# def gs25():
-#     gs25 = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])
-#     table = src.makeTable(gs25)
-
-#     return "".join(table)
 
 @app.route("/<vender>")
 def get_all_datas_from_vender_page(vender):
@@ -99,11 +94,22 @@ def print_table_from_db(vender):
 @app.route("/to_db") # 테스트 필요
 def toDB():
     src.toDatabase(sql_conn)
-
     return ""
 
+def getQueryFromArgs(args):
+    venders = args.get('venders')
+    venders = venders.split(',') if (len(venders)!=0) else []
+
+    dtypes = args.get('dtypes')
+    dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
+
+    products = args.get('products')
+    products = products.split(',') if (len(products)!=0) else []
+
+    return [venders, dtypes, products]
+
 @app.route("/test_sql_query")
-def test():
+def test_query():
     sql_conn = mysql.connect(
             host        ='localhost',   # 루프백주소, 자기자신주소
             user        ='test',        # DB ID      
@@ -114,9 +120,10 @@ def test():
         )
 
     # venders, dtypes, products
-    venders = ["cu"]
-    dtypes = ["2N1"]
-    products = ["수염차"]
+    venders, dtypes, products = getQueryFromArgs(request.args)
+    # venders = ["cu"]
+    # dtypes = ["2N1"]
+    # products = ["수염차"]
     sql_query = src.makeVenderSQLQuery(venders=venders, dtypes=dtypes, products=products)
     
     sql = sql_conn.cursor()
@@ -126,9 +133,20 @@ def test():
 
     sql_conn.close()
 
-    print(list(rows))
-
     return list(rows)
+
+@app.route("/test")
+def test():
+    venders = request.args.get('venders')
+    venders = venders.split(',') if venders != None else []
+
+    dtypes = request.args.get('dtypes')
+    dtypes = dtypes.split(',') if dtypes != None else []
+
+    products = request.args.get('products')
+    products = products.split(',') if products !=  None else []
+
+    return [ venders, dtypes, products ]
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

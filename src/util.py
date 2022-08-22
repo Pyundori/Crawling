@@ -1,3 +1,10 @@
+PAGE_LIST = {
+    'seven_eleven': 'https://www.7-eleven.co.kr/product/listMoreAjax.asp',
+    'gs25': 'http://gs25.gsretail.com/gscvs/ko/products/event-goods-search',
+    'emart24': 'https://www.emart24.co.kr/product/eventProduct.asp',
+    'cu': 'https://cu.bgfretail.com/event/plusAjax.do',
+}
+
 def initThead():
     thead = []
     thead.append("<thead>")
@@ -91,34 +98,3 @@ def makeSQLDatas(vender, vender_name):
     
     return datas
 
-def pushDataToDB(sql_conn, datas):
-    sql = sql_conn.cursor()
-
-    sql_query = "TRUNCATE crawledData"
-    sql.execute(sql_query)
-    sql_conn.commit()
-
-    sql_query = "INSERT INTO crawledData (vender, pType, pName, pPrice, pImg, gName, gPrice, gImg) VALUES "
-    sql_data = []
-
-    idx, turn = 1, 1
-    for data in datas:
-        if idx % 100 == 0:
-            turn += 1
-
-            sql.execute(sql_query + ", ".join(sql_data) + ";")
-            sql_conn.commit()
-            sql_data = []
-            idx = 1
-            
-        sql_value = "("
-        sql_value += ",".join([ f'"{x}"' for x in data ])
-        sql_value += ")"
-
-        sql_data.append(sql_value)
-        idx += 1
-
-    if len(sql_data) > 0:
-        sql_query += ", ".join(sql_data) + ";"
-        sql.execute(sql_query)
-        sql_conn.commit()

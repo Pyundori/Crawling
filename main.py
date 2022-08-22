@@ -4,31 +4,26 @@ import pymysql as mysql
 
 app = Flask(__name__)
 
-sql_conn = mysql.connect(
-            host        ='localhost',   # 루프백주소, 자기자신주소
-            user        ='test',        # DB ID      
-            password    ='mysql123',    # 사용자가 지정한 비밀번호
-            database    ='crawling',
-            charset     ='utf8',
-            # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
-        )
+sql_conn = mysql
 
-PAGE_LIST = {
-    'seven_eleven': 'https://www.7-eleven.co.kr/product/listMoreAjax.asp',
-    'gs25': 'http://gs25.gsretail.com/gscvs/ko/products/event-goods-search',
-    'emart24': 'https://www.emart24.co.kr/product/eventProduct.asp',
-    'cu': 'https://cu.bgfretail.com/event/plusAjax.do',
-}
 
 @app.route("/")
 def main():
     body = []
-    # body.append("<div>")
     body.append("<a href='seven_eleven'    target='_self' style='display:block'>seven_eleven</a>")
     body.append("<a href='emart24'         target='_self' style='display:block'>emart24</a>")
     body.append("<a href='cu'              target='_self' style='display:block'>cu</a>")
     body.append("<a href='gs25'            target='_self' style='display:block'>gs25</a>")
-    # body.append("</div>")
+    body.append("<hr/>")
+    body.append("<a href='seven_eleven/fromdb'  target='_self' style='display:block'>seven_eleven_from_db</a>")
+    body.append("<a href='emart24/fromdb'       target='_self' style='display:block'>emart24_from_db</a>")
+    body.append("<a href='cu/fromdb'            target='_self' style='display:block'>cu_from_db</a>")
+    body.append("<a href='gs25/fromdb'          target='_self' style='display:block'>gs25_from_db</a>")
+    body.append("<hr/>")
+    body.append("<a href='seven_eleven/fromdb/table'  target='_self' style='display:block'>seven_eleven_from_db_table</a>")
+    body.append("<a href='emart24/fromdb/table'       target='_self' style='display:block'>emart24_from_db_table</a>")
+    body.append("<a href='cu/fromdb/table'            target='_self' style='display:block'>cu_from_db_table</a>")
+    body.append("<a href='gs25/fromdb/table'          target='_self' style='display:block'>gs25_from_db_table</a>")
 
     html = "<!DOCTYPE HTML>"
     html += "<html>"
@@ -42,60 +37,68 @@ def main():
 
     return f"""{html}"""
 
-@app.route("/seven_eleven")
-def seven_eleven():
-    seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"])
-    table = src.makeTable(seven_eleven)
+# @app.route("/seven_eleven")
+# def seven_eleven():
+#     seven_eleven = src.POSTRequestAPI_SevenEleven(src.PAGE_LIST["seven_eleven"])
+#     table = src.makeTable(seven_eleven)
+
+#     return "".join(table)
+
+# @app.route("/emart24")
+# def emart24():
+#     emart24 = src.GETRequestAPI_Emart24(src.PAGE_LIST['emart24'])
+#     table = src.makeTable(emart24)
+
+#     return "".join(table)
+
+# @app.route("/cu")
+# def cu():
+#     cu = src.POSTRequestAPI_Cu(src.PAGE_LIST['cu'])
+#     table = src.makeTable(cu)
+
+#     return "".join(table)
+
+# @app.route("/gs25")
+# def gs25():
+#     gs25 = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])
+#     table = src.makeTable(gs25)
+
+#     return "".join(table)
+
+@app.route("/<vender>")
+def get_all_datas_from_vender_page(vender):
+    if vender == "gs25":
+        datas = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])
+    elif vender == "seven_eleven":
+        datas = src.POSTRequestAPI_SevenEleven(src.PAGE_LIST["seven_eleven"])
+    elif vender == "cu":
+        datas = src.POSTRequestAPI_Cu(src.PAGE_LIST['cu'])
+    elif vender == "emart24":
+        datas = src.GETRequestAPI_Emart24(src.PAGE_LIST['emart24'])
+        
+    table = src.makeTable(datas)
 
     return "".join(table)
+    
+@app.route("/<vender>/fromdb")
+def print_datas_from_db(vender):
+    datas = src.GETVenderDataFromDB(sql_conn, vender)
+    datas = list(datas)
 
-@app.route("/emart24")
-def emart24():
-    emart24 = src.GETRequestAPI_Emart24(PAGE_LIST['emart24'])
-    table = src.makeTable(emart24)
+    return datas
 
-    return "".join(table)
+@app.route("/<vender>/fromdb/table")
+def print_table_from_db(vender):
+    datas = src.GETVenderDataFromDB(sql_conn, vender)
+    datas = list(datas)
 
-@app.route("/cu")
-def cu():
-    cu = src.POSTRequestAPI_Cu(PAGE_LIST['cu'])
-    table = src.makeTable(cu)
-
-    return "".join(table)
-
-@app.route("/gs25")
-def crawling():
-    gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"])
-    table = src.makeTable(gs25)
+    table = src.makeTableFromDB(datas)
 
     return "".join(table)
 
 @app.route("/to_db") # 테스트 필요
 def toDB():
-    start = time.time()
-    gs25 = src.GETRequestAPI_Gs25(PAGE_LIST["gs25"])
-    gs25 = src.makeSQLDatas(gs25, "gs25")
-    print('gs25 end', time.time() - start)
-
-    start = time.time()
-    cu = src.POSTRequestAPI_Cu(PAGE_LIST['cu'])
-    cu = src.makeSQLDatas(cu, "cu")
-    print('cu end', time.time() - start)
-
-    start = time.time()
-    emart24 = src.GETRequestAPI_Emart24(PAGE_LIST['emart24'])
-    emart24 = src.makeSQLDatas(emart24, "emart24")
-    print('emart24 end', time.time() - start)
-
-    start = time.time()
-    seven_eleven = src.POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"])
-    seven_eleven = src.makeSQLDatas(seven_eleven, "seven_eleven")
-    print('seven_eleven end', time.time() - start)
-
-    start = time.time()
-    datas = gs25 + cu + emart24 + seven_eleven
-    src.pushDataToDB(sql_conn, datas)
-    print('db end', time.time() - start)
+    src.toDatabase(sql_conn)
 
     return ""
 

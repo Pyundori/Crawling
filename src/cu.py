@@ -48,7 +48,7 @@ def POSTRequestAPI_Cu(url):
                 product_name = li.select_one('.prod_text .name p').text
                 product_price = li.select_one('.prod_text .price strong').text.replace(",", "")
                 product_price = int(product_price)
-                product_img = li.select_one(".prod_img img")['src'].split("//")[-1]
+                product_img = li.select_one(".prod_img img")['src']
 
                 tabs[product_name] = {'price': product_price, 'img': product_img, 'gift': gift}
             

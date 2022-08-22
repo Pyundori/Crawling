@@ -15,6 +15,15 @@ def make_link(links):
         ret_links += f"<a href='{link}'    target='_self' style='display:block'>{link}</a>"
     return ret_links
 
+def make_form(link):
+    form = f"<form action='{link}' methos='post'>\
+        <p>판매점<input type='text' name='venders'> list: cu, gs25, emart24, seven_eleven ex)cu,gs25 </p>\
+        <p>할인타입<input type='text' name='dtypes'> list: 1N1, 2N1, 3N1, GIFT, SALE ex) 1N1,2N1,SALE</p>\
+        <p>상품이름<input type='text' name='products'> ex)옥수수 ex2)물</p>\
+        <p><input type='submit' value='제출'></p>\
+        </form>"
+    return form
+
 @app.route("/")
 def main():
     body = []
@@ -31,21 +40,12 @@ def main():
     body.append("<hr/>")
     body.append(make_link(from_db_make_table))
     body.append("<hr/>")
-    body.append(make_link(from_db_select_query))
-
-
-    form = "<form action='/test_sql_query' methos='post'>\
-        <p>판매점<input type='text' name='venders'></p>\
-        <p>할인타입<input type='text' name='dtypes'></p>\
-        <p>상품이름<input type='text' name='products'></p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
-    body.append(form)
-
+    body.append("<p>쿼리문 만들어서 가져오기(API)<p>")
+    body.append(make_form('/test_sql_query'))
     body.append("<hr/>")
+    body.append("<p>쿼리문 만들어서 가져오기(테이블 만들기)<p>")
+    body.append(make_form('/test_sql_query/table'))
 
-    body.append("<hr/>")
-    body.append(make_link(['test']))
 
 
     html = "<!DOCTYPE HTML>"
@@ -91,22 +91,22 @@ def print_table_from_db(vender):
 
     return "".join(table)
 
-@app.route("/to_db") # 테스트 필요
+@app.route("/to_db")
 def toDB():
     src.toDatabase(sql_conn)
     return ""
 
 def getQueryFromArgs(args):
-    venders = args.get('venders')
+    venders = args.get('venders').replace(" ", "")
     venders = venders.split(',') if (len(venders)!=0) else []
 
-    dtypes = args.get('dtypes')
+    dtypes = args.get('dtypes').replace(" ", "")
     dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
 
-    products = args.get('products')
+    products = args.get('products').replace(" ", "")
     products = products.split(',') if (len(products)!=0) else []
 
-    return [venders, dtypes, products]
+    return venders, dtypes, products
 
 @app.route("/test_sql_query")
 def test_query():
@@ -121,9 +121,9 @@ def test_query():
 
     # venders, dtypes, products
     venders, dtypes, products = getQueryFromArgs(request.args)
-    # venders = ["cu"]
-    # dtypes = ["2N1"]
-    # products = ["수염차"]
+    # venders = ["cu", ...]
+    # dtypes = ["2N1", ...]
+    # products = ["수염차", ...]
     sql_query = src.makeVenderSQLQuery(venders=venders, dtypes=dtypes, products=products)
     
     sql = sql_conn.cursor()
@@ -135,18 +135,36 @@ def test_query():
 
     return list(rows)
 
-@app.route("/test")
-def test():
-    venders = request.args.get('venders')
-    venders = venders.split(',') if venders != None else []
+@app.route("/test_sql_query/table")
+def test_query_table():
+    sql_conn = mysql.connect(
+            host        ='localhost',   # 루프백주소, 자기자신주소
+            user        ='test',        # DB ID      
+            password    ='mysql123',    # 사용자가 지정한 비밀번호
+            database    ='crawling',
+            charset     ='utf8',
+            # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
+        )
 
-    dtypes = request.args.get('dtypes')
-    dtypes = dtypes.split(',') if dtypes != None else []
+    # venders, dtypes, products
+    venders, dtypes, products = getQueryFromArgs(request.args)
+    # venders = ["cu", ...]
+    # dtypes = ["2N1", ...]
+    # products = ["수염차", ...]
+    sql_query = src.makeVenderSQLQuery(venders=venders, dtypes=dtypes, products=products)
+    
+    sql = sql_conn.cursor()
+    sql.execute(sql_query)
 
-    products = request.args.get('products')
-    products = products.split(',') if products !=  None else []
+    rows = sql.fetchall()
 
-    return [ venders, dtypes, products ]
+    sql_conn.close()
+
+    datas = list(rows)
+
+    table = src.makeTableFromDB(datas)
+
+    return "".join(table)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

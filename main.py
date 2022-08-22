@@ -102,5 +102,33 @@ def toDB():
 
     return ""
 
+@app.route("/test_sql_query")
+def test():
+    sql_conn = mysql.connect(
+            host        ='localhost',   # 루프백주소, 자기자신주소
+            user        ='test',        # DB ID      
+            password    ='mysql123',    # 사용자가 지정한 비밀번호
+            database    ='crawling',
+            charset     ='utf8',
+            # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
+        )
+
+    # venders, dtypes, products
+    venders = ["cu"]
+    dtypes = ["2N1"]
+    products = ["수염차"]
+    sql_query = src.makeVenderSQLQuery(venders=venders, dtypes=dtypes, products=products)
+    
+    sql = sql_conn.cursor()
+    sql.execute(sql_query)
+
+    rows = sql.fetchall()
+
+    sql_conn.close()
+
+    print(list(rows))
+
+    return list(rows)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

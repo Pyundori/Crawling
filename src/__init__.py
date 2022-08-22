@@ -4,5 +4,5 @@ from .gs25 import GETRequestAPI_Gs25
 from .seven_eleven import POSTRequestAPI_SevenEleven
 from .util import makeTable, makeSQLDatas, PAGE_LIST, initTbody, setImgTag, setTbodyTag
 
-from .database import toDatabase, makeTableFromDB
+from .database import toDatabase, makeTableFromDB, makeVenderSQLQuery
 from .database import GETVenderDataFromDB

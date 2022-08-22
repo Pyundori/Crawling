@@ -63,29 +63,43 @@ def pushDataToDB(sql_conn, datas):
     
     sql_conn.close()
 
-def makeVenderSQLQuery(venders=[], products=[]):
-    sql_query_type = ""
-    sql_query_product = ""
-    
-    
+def makeVenderSQLQuery(venders=[], dtypes=[], products=[]):
     # vender case:
-
     vender_list = []
     if len(venders) > 0:
         for vender in venders:
             vender_list.append(f"vender='{vender}'")
 
     vender_list_query = " OR ".join(vender_list)
-    
-    sql_query_vender = "SELECT vender as V, pType as T, pName, pPrice, pImg, gName, gPrice, gImg FROM crawledData"
+    if len(vender_list_query) > 0:
+        vender_list_query = " WHERE " + vender_list_query
+    sql_query_vender = "SELECT * FROM crawledData" + vender_list_query
+
+    # type case:
+    dtype_list = []
+    if len(dtypes) > 0:
+        for dtype in dtypes:
+            dtype_list.append(f"pType='{dtype}'")
+
+    dtype_list_query = " OR ".join(dtype_list)
+    if len(dtype_list_query) > 0:
+        dtype_list_query = " WHERE " + dtype_list_query
+    sql_query_dtype = f"SELECT * FROM ({sql_query_vender}) V" + dtype_list_query
 
     # product_name case:
-
     product_list = []
     if len(products) > 0:
         for product in products:
-            vender_list.append(f"vender='{product}'")
+            product_list.append(f"INSTR(pName, '{product}')>0")
 
+    product_list_query = " OR ".join(product_list)
+    if len(product_list_query) > 0:
+        product_list_query = " WHERE " + product_list_query
+
+    sql_query = \
+    f"SELECT \
+    A.vender, A.pType, A.pPrice, A.pName, A.pImg, A.gName, A.gPrice, A.gImg \
+    FROM ({sql_query_dtype}) A" + product_list_query
 
     return sql_query
 

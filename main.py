@@ -30,6 +30,7 @@ def main():
 
 @app.route("/<vender>")
 def get_all_datas_from_vender_page(vender):
+    datas = {}
     if vender == "gs25":
         datas = src.gs25_api(os.environ.get('URL_GS25'))
         # datas = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])

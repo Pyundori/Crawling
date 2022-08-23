@@ -17,16 +17,16 @@ def SQLConnection(sql_conn):
     return sql_conn
 
 def toDatabase(sql_conn):
-    gs25 = GETRequestAPI_Gs25(PAGE_LIST["gs25"])
+    gs25 = gs25_api(os.environ.get("URL_GS25"))
     gs25 = makeSQLDatas(gs25, "gs25")
 
-    cu = POSTRequestAPI_Cu(PAGE_LIST['cu'])
+    cu = cu_api(os.environ.get("URL_CU"))
     cu = makeSQLDatas(cu, "cu")
 
-    emart24 = GETRequestAPI_Emart24(PAGE_LIST['emart24'])
+    emart24 = emart24_api(os.environ.get("URL_EMART24"))
     emart24 = makeSQLDatas(emart24, "emart24")
 
-    seven_eleven = POSTRequestAPI_SevenEleven(PAGE_LIST["seven_eleven"])
+    seven_eleven = se_api(os.environ.get("URL_SE"))
     seven_eleven = makeSQLDatas(seven_eleven, "seven_eleven") 
 
     datas = gs25 + cu + emart24 + seven_eleven

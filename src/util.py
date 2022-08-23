@@ -1,10 +1,3 @@
-PAGE_LIST = {
-    'seven_eleven': 'https://www.7-eleven.co.kr/product/listMoreAjax.asp',
-    'gs25': 'http://gs25.gsretail.com/gscvs/ko/products/event-goods-search',
-    'emart24': 'https://www.emart24.co.kr/product/eventProduct.asp',
-    'cu': 'https://cu.bgfretail.com/event/plusAjax.do',
-}
-
 def initThead():
     thead = []
     thead.append("<thead>")

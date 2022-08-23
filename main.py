@@ -1,7 +1,12 @@
 import src
-from flask import Flask
+from flask import Flask, request
 import pymysql as mysql
-from flask import request
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -63,13 +68,17 @@ def main():
 @app.route("/<vender>")
 def get_all_datas_from_vender_page(vender):
     if vender == "gs25":
-        datas = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])
+        datas = src.gs25_api(os.environ.get('URL_GS25'))
+        # datas = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])
     elif vender == "seven_eleven":
-        datas = src.POSTRequestAPI_SevenEleven(src.PAGE_LIST["seven_eleven"])
+        datas = src.se_api(os.environ.get('URL_SE'))
+        # datas = src.POSTRequestAPI_SevenEleven(src.PAGE_LIST["seven_eleven"])
     elif vender == "cu":
-        datas = src.POSTRequestAPI_Cu(src.PAGE_LIST['cu'])
+        datas = src.cu_api(os.environ.get('URL_CU'))
+        # datas = src.POSTRequestAPI_Cu(src.PAGE_LIST['cu'])
     elif vender == "emart24":
-        datas = src.GETRequestAPI_Emart24(src.PAGE_LIST['emart24'])
+        datas = src.emart24_api(os.environ.get('URL_EMART24'))
+        # datas = src.GETRequestAPI_Emart24(src.PAGE_LIST['emart24'])
         
     table = src.makeTable(datas)
 

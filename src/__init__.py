@@ -6,3 +6,4 @@ from .util import makeTable, makeSQLDatas, PAGE_LIST, initTbody, setImgTag, setT
 
 from .database import toDatabase, makeTableFromDB, makeVenderSQLQuery
 from .database import GETVenderDataFromDB
+from .database import GETCustomProductQuery, GETCustomProductQuery_Table

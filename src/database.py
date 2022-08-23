@@ -173,3 +173,40 @@ def GETVenderDataFromDB(sql_conn, vender):
     sql_conn.close()
 
     return rows
+
+def getQueryFromArgs(args):
+    venders = args.get('venders').replace(" ", "")
+    venders = venders.split(',') if (len(venders)!=0) else []
+
+    dtypes = args.get('dtypes').replace(" ", "")
+    dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
+
+    products = args.get('products').replace(" ", "")
+    products = products.split(',') if (len(products)!=0) else []
+
+    return venders, dtypes, products
+
+def GETCustomProductQuery(sql_conn, args):
+    sql_conn = SQLConnection(sql_conn)
+
+    # venders, dtypes, products
+    venders, dtypes, products = getQueryFromArgs(args)
+    # venders = ["cu", ...]
+    # dtypes = ["2N1", ...]
+    # products = ["수염차", ...]
+    sql_query = makeVenderSQLQuery(venders=venders, dtypes=dtypes, products=products)
+    
+    sql = sql_conn.cursor()
+    sql.execute(sql_query)
+
+    rows = sql.fetchall()
+
+    sql_conn.close()
+
+    return list(rows)
+
+
+def GETCustomProductQuery_Table(sql_conn, args):
+    datas = GETCustomProductQuery(sql_conn, args)
+
+    return makeTableFromDB(datas)

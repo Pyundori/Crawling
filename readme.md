@@ -6,7 +6,7 @@ SQL Query 만드는 방식
 
 ```
 1. Vender
-SELECT vender, pType, pPrice, pName, pImg, gName, gPrice, gImg
+SELECT *
 FROM crawledData
 {WHERE}
 ```
@@ -45,7 +45,7 @@ FROM (
 	FROM (
 		SELECT * 
 		FROM (
-			SELECT vender, pType, pPrice, pName, pImg, gName, gPrice, gImg
+			SELECT *
 			FROM crawledData
 			{WHERE}
 		) <__NAME>

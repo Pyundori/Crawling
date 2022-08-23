@@ -67,7 +67,11 @@ def pushDataToDB(sql_conn, datas):
     
     sql_conn.close()
 
-def makeVenderSQLQuery(venders=[], dtypes=[], products=[]):
+def makeSQLQuery(venders=[], dtypes=[], products=[], page=1):
+    # 특정 개수만 가져옴
+    MAX_CNT = 10
+    LIMIT = f" LIMIT {MAX_CNT * (page-1)}, {MAX_CNT}"
+
     # vender case:
     vender_list = []
     if len(venders) > 0:
@@ -103,7 +107,7 @@ def makeVenderSQLQuery(venders=[], dtypes=[], products=[]):
     sql_query = \
     f"SELECT \
     A.vender, A.pType, A.pPrice, A.pName, A.pImg, A.gName, A.gPrice, A.gImg \
-    FROM ({sql_query_dtype}) A" + product_list_query
+    FROM ({sql_query_dtype}) A" + product_list_query + LIMIT
 
     return sql_query
 
@@ -163,7 +167,7 @@ def GETVenderDataFromDB(sql_conn, vender):
     sql_conn = SQLConnection(sql_conn)
 
     sql_query = f"SELECT vender as V, pType as T, pName, pPrice, pImg, gName, gPrice, gImg FROM crawledData where vender='{vender}'"
-    #sql_query = makeVenderSQLQuery(vender)
+    #sql_query = makeSQLQuery(vender)
     
     sql = sql_conn.cursor()
     sql.execute(sql_query)
@@ -175,26 +179,31 @@ def GETVenderDataFromDB(sql_conn, vender):
     return rows
 
 def getQueryFromArgs(args):
-    venders = args.get('venders').replace(" ", "")
+    venders = ",".join(args.getlist('venders'))
+    # venders = args.get('venders').replace(" ", "")
     venders = venders.split(',') if (len(venders)!=0) else []
 
-    dtypes = args.get('dtypes').replace(" ", "")
+    dtypes = ",".join(args.getlist('dtypes'))
+    # dtypes = args.get('dtypes').replace(" ", "")
     dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
 
     products = args.get('products').replace(" ", "")
     products = products.split(',') if (len(products)!=0) else []
 
-    return venders, dtypes, products
+    page = args.get('page')
+    try:
+        page = int(page)
+    except:
+        page = 1
+
+    return venders, dtypes, products, page
 
 def GETCustomProductQuery(sql_conn, args):
     sql_conn = SQLConnection(sql_conn)
 
-    # venders, dtypes, products
-    venders, dtypes, products = getQueryFromArgs(args)
-    # venders = ["cu", ...]
-    # dtypes = ["2N1", ...]
-    # products = ["수염차", ...]
-    sql_query = makeVenderSQLQuery(venders=venders, dtypes=dtypes, products=products)
+    venders, dtypes, products, page = getQueryFromArgs(args)
+    sql_query = makeSQLQuery(venders=venders, dtypes=dtypes, products=products, page=page)
+    print(sql_query)
     
     sql = sql_conn.cursor()
     sql.execute(sql_query)

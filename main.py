@@ -1,5 +1,5 @@
 import src
-from flask import Flask, request
+from flask import Flask, request, Response, json
 import pymysql as mysql
 
 from dotenv import load_dotenv
@@ -69,15 +69,42 @@ def toDB():
     src.toDatabase(sql_conn)
     return ""
 
-@app.route("/api/product_query")
+@app.route("/api/product_query", methods=["GET"])
 def test_query():
     datas = src.GETCustomProductQuery(sql_conn, request.args)
-    return datas
+
+    temp = [ {
+        'vender': x[0],
+        'dtype': x[1],
+        'pName': x[2],
+        'pPrice': x[3],
+        'pImg': x[4],
+    } for x in datas ]
+
+    ret_data = {
+        'data': temp,
+        'response_code': 201,
+    }
+
+    # return temp
+    json_str = json.dumps(ret_data, ensure_ascii=False)
+    response = Response(json_str, content_type="application/json; charset=utf-8" )
+    return response
 
 @app.route("/api/product_query/table")
 def test_query_table():
     table = src.GETCustomProductQuery_Table(sql_conn, request.args)
     return "".join(table)
+
+@app.route("/test")
+def test():
+    dtypes = ",".join(request.args.getlist('dtypes'))
+    # dtypes = args.get('dtypes').replace(" ", "")
+    dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
+    venders = ",".join(request.args.getlist('venders'))
+    # venders = args.get('venders').replace(" ", "")
+    venders = venders.split(',') if (len(venders)!=0) else []
+    return {'dtypes': dtypes, 'venders': venders}
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

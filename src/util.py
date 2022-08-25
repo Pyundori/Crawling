@@ -62,32 +62,3 @@ def makeTable(vender):
     table.append("</table>")
 
     return table
-
-def makeSQLDatas(vender, vender_name):
-    datas = []
-
-    for legend, legend_datas in vender.items():
-        for product_name, product_data in legend_datas.items():
-            data = []
-            data.append(vender_name)
-
-            data.append(legend)
-            data.append(product_name)
-
-            data.append(product_data['price'])
-            data.append(product_data['img'])
-
-            if product_data['gift'] != None:                
-                for gift_name, gift_data in product_data['gift'].items():
-                    data.append(gift_name)
-                    data.append(gift_data['price'])
-                    data.append(gift_data['img'])
-            else:
-                data.append('null')
-                data.append(0)
-                data.append('null')
-
-            datas.append(data)
-    
-    return datas
-

@@ -1,4 +1,4 @@
-import src
+from src import *
 import time
 from dotenv import load_dotenv
 import os
@@ -15,57 +15,6 @@ def SQLConnection(sql_conn):
             # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
         )
     return sql_conn
-
-def toDatabase(sql_conn):
-    gs25 = gs25_api(os.environ.get("URL_GS25"))
-    gs25 = makeSQLDatas(gs25, "gs25")
-
-    cu = cu_api(os.environ.get("URL_CU"))
-    cu = makeSQLDatas(cu, "cu")
-
-    emart24 = emart24_api(os.environ.get("URL_EMART24"))
-    emart24 = makeSQLDatas(emart24, "emart24")
-
-    seven_eleven = se_api(os.environ.get("URL_SE"))
-    seven_eleven = makeSQLDatas(seven_eleven, "seven_eleven") 
-
-    datas = gs25 + cu + emart24 + seven_eleven
-    pushDataToDB(sql_conn, datas)
-
-def pushDataToDB(sql_conn, datas):
-    sql_conn = src.SQLConnection(sql_conn)
-    sql = sql_conn.cursor()
-
-    sql_query = "TRUNCATE crawledData"
-    sql.execute(sql_query)
-    sql_conn.commit()
-
-    sql_query = "INSERT INTO crawledData (vender, pType, pName, pPrice, pImg, gName, gPrice, gImg) VALUES "
-    sql_data = []
-
-    idx, turn = 1, 1
-    for data in datas:
-        if idx % 100 == 0:
-            turn += 1
-
-            sql.execute(sql_query + ", ".join(sql_data) + ";")
-            sql_conn.commit()
-            sql_data = []
-            idx = 1
-            
-        sql_value = "("
-        sql_value += ",".join([ f'"{x}"' for x in data ])
-        sql_value += ")"
-
-        sql_data.append(sql_value)
-        idx += 1
-
-    if len(sql_data) > 0:
-        sql_query += ", ".join(sql_data) + ";"
-        sql.execute(sql_query)
-        sql_conn.commit()
-    
-    sql_conn.close()
 
 def makeSQLQuery(venders=[], dtypes=[], products=[], page=1):
     # 특정 개수만 가져옴

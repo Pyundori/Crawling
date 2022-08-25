@@ -64,11 +64,6 @@ def print_table_from_db(vender):
 
     return "".join(table)
 
-@app.route("/to_db")
-def toDB():
-    src.toDatabase(sql_conn)
-    return ""
-
 @app.route("/api/product_query", methods=["GET"])
 def test_query():
     datas = src.GETCustomProductQuery(sql_conn, request.args)

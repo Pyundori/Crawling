@@ -81,9 +81,10 @@ def test_query():
         'pImg': x[4],
     } for x in datas ]
 
+    res_code = 201 if len(temp) > 0 else 202
     ret_data = {
         'data': temp,
-        'response_code': 201,
+        'response_code': res_code,
     }
 
     # return temp

@@ -1,4 +1,4 @@
-from src import *
+import src
 import time
 from dotenv import load_dotenv
 import os
@@ -7,7 +7,7 @@ load_dotenv()
 
 def SQLConnection(sql_conn):
     sql_conn = sql_conn.connect(
-            host        = os.environ.get('DB_HOST'),   # 루프백주소, 자기자신주소
+            host        = 'localhost',   # 루프백주소, 자기자신주소
             user        = os.environ.get('DB_USER'),        # DB ID      
             password    = os.environ.get('DB_PW'),    # 사용자가 지정한 비밀번호
             database    = 'crawling',
@@ -33,7 +33,7 @@ def toDatabase(sql_conn):
     pushDataToDB(sql_conn, datas)
 
 def pushDataToDB(sql_conn, datas):
-    sql_conn = SQLConnection(sql_conn)
+    sql_conn = src.SQLConnection(sql_conn)
     sql = sql_conn.cursor()
 
     sql_query = "TRUNCATE crawledData"
@@ -106,7 +106,7 @@ def makeSQLQuery(venders=[], dtypes=[], products=[], page=1):
 
     sql_query = \
     f"SELECT \
-    A.vender, A.pType, A.pPrice, A.pName, A.pImg, A.gName, A.gPrice, A.gImg \
+    A.vender, A.pType, A.pName, A.pPrice, A.pImg, A.gName, A.gPrice, A.gImg \
     FROM ({sql_query_dtype}) A" + product_list_query + LIMIT
 
     return sql_query
@@ -179,20 +179,32 @@ def GETVenderDataFromDB(sql_conn, vender):
     return rows
 
 def getQueryFromArgs(args):
-    venders = ",".join(args.getlist('venders'))
-    # venders = args.get('venders').replace(" ", "")
-    venders = venders.split(',') if (len(venders)!=0) else []
-
-    dtypes = ",".join(args.getlist('dtypes'))
-    # dtypes = args.get('dtypes').replace(" ", "")
-    dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
-
-    products = args.get('products').replace(" ", "")
-    products = products.split(',') if (len(products)!=0) else []
-
-    page = args.get('page')
     try:
-        page = int(page)
+        venders = ",".join(args.getlist('venders'))
+        # venders = args.get('venders').replace(" ", "")
+        venders = venders.split(',') if (len(venders)!=0) else []
+    except:
+        venders = []
+
+    try:
+        dtypes = ",".join(args.getlist('dtypes'))
+        # dtypes = args.get('dtypes').replace(" ", "")
+        dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
+    except:
+        dtypes = []
+
+    try:
+        products = args.get('products').replace(" ", "")
+        products = products.split(',') if (len(products)!=0) else []
+    except:
+        products = []
+
+    try:
+        page = args.get('page')
+        try:
+            page = int(page)
+        except:
+            page = 1
     except:
         page = 1
 

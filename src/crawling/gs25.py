@@ -16,13 +16,14 @@ def GetGs25Token():
 
 def GETRequestAPI_Gs25(url):
     token = GetGs25Token()
-    
     datas = {}
     for param in ['ONE_TO_ONE', 'TWO_TO_ONE', "GIFT"]:
         tabs = {}
         params = f'pageNum=1&pageSize=10000&searchType=&searchWord=&parameterList={param}'
         # api_url = url + ';' + params
+
         api_url = url + '?' + token + ';' + params
+
         responses = json.loads(requests.get(url=api_url).json())['results']
         for data in responses:
             gift = None

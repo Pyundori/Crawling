@@ -12,13 +12,29 @@ app.config['JSON_AS_ASCII'] = False
 
 sql_conn = mysql
 
+api_func = {
+    "gs25": src.gs25_api,
+    "seven_eleven": src.se_api,
+    "cu": src.cu_api,
+    "emart24": src.emart24_api,
+    "ministop": src.ministop_api, 
+}
+
+api_path = {
+    "gs25": 'URL_GS25',
+    "seven_eleven": 'URL_SE',
+    "cu": 'URL_CU',
+    "emart24": 'URL_EMART24',
+    "ministop": 'URL_MINISTOP', 
+}
+
 @app.route("/")
 def main():
 
     args = {
-        'from_server' : ["seven_eleven", "emart24", "cu", "gs25"], 
-        'from_db' : ["seven_eleven/fromdb", "emart24/fromdb", "cu/fromdb", "gs25/fromdb"],
-        'from_db_make_table' : ["seven_eleven/fromdb/table", "emart24/fromdb/table", "cu/fromdb/table", "gs25/fromdb/table"],
+        'from_server' : ["seven_eleven", "emart24", "cu", "gs25", "ministop"], 
+        'from_db' : ["seven_eleven/fromdb", "emart24/fromdb", "cu/fromdb", "gs25/fromdb", "ministop/formdb"],
+        'from_db_make_table' : ["seven_eleven/fromdb/table", "emart24/fromdb/table", "cu/fromdb/table", "gs25/fromdb/table", "ministop/formdb/table"],
         'from_db_select_query' : "/api/product_query",
         'from_db_select_query_table' : "/api/product_query/table",
     }
@@ -31,18 +47,22 @@ def main():
 @app.route("/<vender>")
 def get_all_datas_from_vender_page(vender):
     datas = {}
-    if vender == "gs25":
-        datas = src.gs25_api(os.environ.get('URL_GS25'))
-        # datas = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])
-    elif vender == "seven_eleven":
-        datas = src.se_api(os.environ.get('URL_SE'))
-        # datas = src.POSTRequestAPI_SevenEleven(src.PAGE_LIST["seven_eleven"])
-    elif vender == "cu":
-        datas = src.cu_api(os.environ.get('URL_CU'))
-        # datas = src.POSTRequestAPI_Cu(src.PAGE_LIST['cu'])
-    elif vender == "emart24":
-        datas = src.emart24_api(os.environ.get('URL_EMART24'))
-        # datas = src.GETRequestAPI_Emart24(src.PAGE_LIST['emart24'])
+    try:
+        datas = api_func[vender](os.environ.get(api_path[vender]))
+    except:
+        None
+    # if vender == "gs25":
+    #     datas = src.gs25_api(os.environ.get('URL_GS25'))
+    #     # datas = src.GETRequestAPI_Gs25(src.PAGE_LIST["gs25"])
+    # elif vender == "seven_eleven":
+    #     datas = src.se_api(os.environ.get('URL_SE'))
+    #     # datas = src.POSTRequestAPI_SevenEleven(src.PAGE_LIST["seven_eleven"])
+    # elif vender == "cu":
+    #     datas = src.cu_api(os.environ.get('URL_CU'))
+    #     # datas = src.POSTRequestAPI_Cu(src.PAGE_LIST['cu'])
+    # elif vender == "emart24":
+    #     datas = src.emart24_api(os.environ.get('URL_EMART24'))
+    #     # datas = src.GETRequestAPI_Emart24(src.PAGE_LIST['emart24'])
         
     table = src.makeTable(datas)
 

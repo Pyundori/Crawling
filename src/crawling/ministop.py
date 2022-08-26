@@ -26,7 +26,7 @@ def POSTRequestAPI_Ministop(url):
     }
 
     datas = {}
-    img_path = "https://www.ministop.co.kr/MiniStopHomePage/page/pic.do?n=event"
+    img_path = os.environ.get("URL_MINISTOP_IMG")
 
     for idx, leg in enumerate(legend.items()):
         l = [1]

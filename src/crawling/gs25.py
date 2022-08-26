@@ -52,3 +52,10 @@ def GETRequestAPI_Gs25(url):
         param = param.replace("ONE", "1").replace("TWO", "2").replace("THREE", "3").replace("_", "").replace("TO", "N")
         datas[param] = tabs
     return datas
+
+if __name__ == "__main__":
+    datas = GETRequestAPI_Gs25(os.environ.get("URL_MINISTOP"))
+
+    for leg, products in datas.items():
+        for product, data in products.items():
+            print(product, data)

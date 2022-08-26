@@ -57,3 +57,10 @@ def GETRequestAPI_Emart24(url):
         datas[cate] = tabs
 
     return datas
+
+if __name__ == "__main__":
+    datas = GETRequestAPI_Emart24(os.environ.get("URL_MINISTOP"))
+
+    for leg, products in datas.items():
+        for product, data in products.items():
+            print(product, data)

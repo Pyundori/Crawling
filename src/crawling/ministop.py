@@ -3,10 +3,12 @@ import time
 import math
 from urllib import parse
 
-url = 'https://www.ministop.co.kr/MiniStopHomePage/page/querySimple.do'
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def POSTRequestAPI_Ministop(url):
-
     params = {
         'pageId': '',
         'sqlnum': 1,
@@ -15,7 +17,6 @@ def POSTRequestAPI_Ministop(url):
         'sortGu': '',
         'tm': '',
     }
-
 
     legend = {
         'plus1': '1N1',
@@ -52,3 +53,10 @@ def POSTRequestAPI_Ministop(url):
                 break
         datas[leg[1]] = tabs
     return datas
+
+if __name__ == "__main__":
+    datas = POSTRequestAPI_Ministop(os.environ.get("URL_MINISTOP"))
+
+    for leg, products in datas.items():
+        for product, data in products.items():
+            print(product, data)

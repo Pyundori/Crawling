@@ -47,3 +47,10 @@ def POSTRequestAPI_SevenEleven(url):
 
         datas[legend] = tabs
     return datas
+
+if __name__ == "__main__":
+    datas = POSTRequestAPI_SevenEleven(os.environ.get("URL_MINISTOP"))
+
+    for leg, products in datas.items():
+        for product, data in products.items():
+            print(product, data)

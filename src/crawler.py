@@ -38,24 +38,31 @@ def makeSQLDatas(vender, vender_name):
     
     return datas
 
+api_func = {
+    "gs25": gs25_api,
+    "seven_eleven": se_api,
+    "cu": cu_api,
+    "emart24": emart24_api,
+    "ministop": ministop_api, 
+}
+
+api_path = {
+    "gs25": 'URL_GS25',
+    "seven_eleven": 'URL_SE',
+    "cu": 'URL_CU',
+    "emart24": 'URL_EMART24',
+    "ministop": 'URL_MINISTOP', 
+}
+
 def toDatabase(sql_conn):
-    gs25 = gs25_api(os.environ.get("URL_GS25"))
-    gs25 = makeSQLDatas(gs25, "gs25")
+    datas = []
 
-    cu = cu_api(os.environ.get("URL_CU"))
-    cu = makeSQLDatas(cu, "cu")
+    for key, func in api_func.items():
+        data = func(os.environ.get(api_path[key]))
+        datas += makeSQLDatas(data, key)
 
-    emart24 = emart24_api(os.environ.get("URL_EMART24"))
-    emart24 = makeSQLDatas(emart24, "emart24")
-
-    seven_eleven = se_api(os.environ.get("URL_SE"))
-    seven_eleven = makeSQLDatas(seven_eleven, "seven_eleven")
-
-    ministop = ministop_api(os.environ.get("URL_MINISTOP"))
-    ministop = makeSQLDatas(ministop, "ministop")
-
-    datas = gs25 + cu + emart24 + seven_eleven
     pushDataToDB(sql_conn, datas)
+
 
 def SQLConnection(sql_conn):
     sql_conn = sql_conn.connect(

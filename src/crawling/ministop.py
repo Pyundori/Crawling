@@ -31,7 +31,7 @@ def POSTRequestAPI_Ministop(url):
     for idx, leg in enumerate(legend.items()):
         l = [1]
         tabs = {}
-        print(idx, parse.quote(f"{idx+1}::"))
+        
         for x in l:
             params['pageId'] = f'event/{leg[0]}'
             params['paramInfo'] = str(parse.quote(f"{idx+1}::"))
@@ -44,9 +44,10 @@ def POSTRequestAPI_Ministop(url):
             )
             
             for product in res.json()['recordList']:
-                gift = {}
+                gift = None
                 product = product['fields']
                 if leg[0] == 'add':
+                    gift = {}
                     img = img_path + f"{product[6].split(']')[1].split('_')[0]}.{product[6]}"
                     gift[product[3].split(" ")[0]] = {'price': int(product[4]), 'img': img}
                     img = img_path + f"{product[5].split(']')[1].split('_')[0]}.{product[5]}"
@@ -60,6 +61,7 @@ def POSTRequestAPI_Ministop(url):
 
             if res.json()['havingMore'] == False:
                 break
+                
         datas[leg[1]] = tabs
     return datas
 

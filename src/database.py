@@ -1,4 +1,6 @@
-from src import *
+from .crawling import *
+from .make_main import *
+from .util import makeTable, initTbody, setImgTag, setTbodyTag
 import time
 from dotenv import load_dotenv
 import os

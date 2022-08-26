@@ -49,7 +49,10 @@ def toDatabase(sql_conn):
     emart24 = makeSQLDatas(emart24, "emart24")
 
     seven_eleven = se_api(os.environ.get("URL_SE"))
-    seven_eleven = makeSQLDatas(seven_eleven, "seven_eleven") 
+    seven_eleven = makeSQLDatas(seven_eleven, "seven_eleven")
+
+    ministop = ministop_api(os.environ.get("URL_MINISTOP"))
+    ministop = makeSQLDatas(ministop, "ministop")
 
     datas = gs25 + cu + emart24 + seven_eleven
     pushDataToDB(sql_conn, datas)

@@ -6,6 +6,11 @@ import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def GetGs25Token():
     responses = requests.get("http://gs25.gsretail.com/gscvs/ko/products/event-goods").text
 
@@ -54,7 +59,7 @@ def GETRequestAPI_Gs25(url):
     return datas
 
 if __name__ == "__main__":
-    datas = GETRequestAPI_Gs25(os.environ.get("URL_MINISTOP"))
+    datas = GETRequestAPI_Gs25(os.environ.get("URL_GS25"))
 
     for leg, products in datas.items():
         for product, data in products.items():

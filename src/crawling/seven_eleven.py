@@ -5,6 +5,11 @@ import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def POSTRequestAPI_SevenEleven(url):
     # legends = ['1N1', '2N1', 'GIFT', 'SALE']
     # 1+1 : fncMore(1)
@@ -49,7 +54,7 @@ def POSTRequestAPI_SevenEleven(url):
     return datas
 
 if __name__ == "__main__":
-    datas = POSTRequestAPI_SevenEleven(os.environ.get("URL_MINISTOP"))
+    datas = POSTRequestAPI_SevenEleven(os.environ.get("URL_SE"))
 
     for leg, products in datas.items():
         for product, data in products.items():

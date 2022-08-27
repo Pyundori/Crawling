@@ -6,6 +6,11 @@ import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def GETRequestAPI_Emart24(url):
     img_path = 'https://www.emart24.co.kr'
 
@@ -59,7 +64,7 @@ def GETRequestAPI_Emart24(url):
     return datas
 
 if __name__ == "__main__":
-    datas = GETRequestAPI_Emart24(os.environ.get("URL_MINISTOP"))
+    datas = GETRequestAPI_Emart24(os.environ.get("URL_EMART24"))
 
     for leg, products in datas.items():
         for product, data in products.items():

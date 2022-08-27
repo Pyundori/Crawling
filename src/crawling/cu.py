@@ -6,6 +6,11 @@ import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 urllib3.disable_warnings(InsecureRequestWarning)
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def GetCuSearchConditionLegend():
     url = 'https://cu.bgfretail.com/event/plus.do?category=event&depth2=1&sf=N'
     responses = requests.get(url).text
@@ -50,6 +55,8 @@ def POSTRequestAPI_Cu(url):
                 product_price = int(product_price)
                 product_img = li.select_one(".prod_img img")['src']
 
+                product_img = "https://" + product_img.split("//")[-1]
+
                 tabs[product_name] = {'price': product_price, 'img': product_img, 'gift': gift}
             
             idx += 1
@@ -59,7 +66,7 @@ def POSTRequestAPI_Cu(url):
     return datas
 
 if __name__ == "__main__":
-    datas = POSTRequestAPI_Cu(os.environ.get("URL_MINISTOP"))
+    datas = POSTRequestAPI_Cu(os.environ.get("URL_CU"))
 
     for leg, products in datas.items():
         for product, data in products.items():

@@ -25,6 +25,7 @@ def main():
     args = {
         'from_db_select_query'          : "/api/product_query",
         'from_db_select_query_table'    : "/api/product_query/table",
+        'check_dup'                     : "/api/user/check_dup",
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -99,8 +100,11 @@ def product_query_table():
 @app.route("/api/user/check_dup")
 def verify_column():
     args = request.args.to_dict()
+    if args['data'] == "" or args['column'] == "": 
+        return {'res_code': 400}    # 해당 데이터 추출 불가능. id나 name이 ""인 경우는 없다.
+                                    # column값도 ""인 경우는 없다.
     res_code = src.checkDuplicated(args['column'], args['data'])
-    return {'code': res_code}
+    return {'res_code': res_code}
 
 @app.route("/test")
 def test():
@@ -109,7 +113,7 @@ def test():
 
     venders = ",".join(request.args.getlist('venders'))
     venders = venders.split(',') if (len(venders)!=0) else []
-    
+
     return {'dtypes': dtypes, 'venders': venders}
 
 if __name__ == '__main__':

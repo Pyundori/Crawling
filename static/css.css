@@ -9,10 +9,16 @@
     text-align: left;
     outline: none;
     font-size: 15px;
+    margin-bottom: 10px;
   }
   
   /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  .active, .collapsible:hover {
+  .active {
+    background-color: #ccc;
+    margin-bottom: 0px;
+  }
+
+  .collapsible:hover {
     background-color: #ccc;
   }
   
@@ -21,5 +27,7 @@
     padding: 0 18px;
     display: none;
     overflow: hidden;
-    background-color: #f1f1f1;
+    background-color: #f0f0f0;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
   }

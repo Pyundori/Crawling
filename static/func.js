@@ -29,5 +29,5 @@ const appliClickEventToContentDiv = () => {
 
 window.onload = () => {
     applyClickEventToCollapsibleBtn()
-    appliClickEventToContentDiv()
+    // appliClickEventToContentDiv()
 }

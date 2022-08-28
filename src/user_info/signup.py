@@ -39,7 +39,7 @@ def checkDuplicated(column, data):
         return 201
     return 202
 
-def signIn():
+def signUp():
     None
 
 if __name__ == "__main__":

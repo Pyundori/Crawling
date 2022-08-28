@@ -97,7 +97,7 @@ def product_query_table():
 # args
 #   column: id or name
 #   data: <str>
-@app.route("/api/user/check_dup")
+@app.route("/api/user/check_dup", methods=["GET"])
 def verify_column():
     args = request.args.to_dict()
     if args['data'] == "" or args['column'] == "": 

@@ -64,26 +64,26 @@ def toDatabase(sql_conn):
     pushDataToDB(sql_conn, datas)
 
 
-def SQLConnection(sql_conn):
+def SQLConnection(sql_conn, database):
     sql_conn = sql_conn.connect(
             host        = 'localhost',   # 루프백주소, 자기자신주소
             user        = os.environ.get('DB_USER'),        # DB ID      
             password    = os.environ.get('DB_PW'),    # 사용자가 지정한 비밀번호
-            database    = 'crawling',
+            database    = database,
             charset     = 'utf8',
             # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
         )
     return sql_conn
 
 def pushDataToDB(sql_conn, datas):
-    sql_conn = SQLConnection(sql_conn)
+    sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
     sql = sql_conn.cursor()
 
-    sql_query = "TRUNCATE TABLE crawledData"
+    sql_query = f"TRUNCATE TABLE {os.environ.get('TABLE_CRAWLING')}"
     sql.execute(sql_query)
     sql_conn.commit()
 
-    sql_query = "INSERT INTO crawledData (vender, pType, pName, pPrice, pImg, gName, gPrice, gImg) VALUES "
+    sql_query = f"INSERT INTO {os.environ.get('TABLE_CRAWLING')} (vender, pType, pName, pPrice, pImg, gName, gPrice, gImg) VALUES "
     sql_data = []
 
     idx, turn = 1, 1

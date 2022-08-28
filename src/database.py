@@ -7,12 +7,12 @@ import os
 
 load_dotenv()
 
-def SQLConnection(sql_conn):
+def SQLConnection(sql_conn, database):
     sql_conn = sql_conn.connect(
             host        = 'localhost',   # 루프백주소, 자기자신주소
             user        = os.environ.get('DB_USER'),        # DB ID      
             password    = os.environ.get('DB_PW'),    # 사용자가 지정한 비밀번호
-            database    = 'crawling',
+            database    = database,
             charset     = 'utf8',
             # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
         )
@@ -32,7 +32,7 @@ def makeSQLQuery(venders=[], dtypes=[], products=[], page=1):
     vender_list_query = " OR ".join(vender_list)
     if len(vender_list_query) > 0:
         vender_list_query = " WHERE " + vender_list_query
-    sql_query_vender = "SELECT * FROM crawledData" + vender_list_query
+    sql_query_vender = f"SELECT * FROM {os.environ.get('TABLE_CRAWLING')}" + vender_list_query
 
     # type case:
     dtype_list = []
@@ -115,9 +115,9 @@ def initThead():
     return thead
 
 def GETVenderDataFromDB(sql_conn, vender):
-    sql_conn = SQLConnection(sql_conn)
+    sql_conn = SQLConnection(sql_conn, os.environ.get("DB_DB"))
 
-    sql_query = f"SELECT vender as V, pType as T, pName, pPrice, pImg, gName, gPrice, gImg FROM crawledData where vender='{vender}'"
+    sql_query = f"SELECT vender as V, pType as T, pName, pPrice, pImg, gName, gPrice, gImg FROM {os.environ.get('TABLE_CRAWLING')} where vender='{vender}'"
     #sql_query = makeSQLQuery(vender)
     
     sql = sql_conn.cursor()
@@ -162,7 +162,7 @@ def getQueryFromArgs(args):
     return venders, dtypes, products, page
 
 def GETCustomProductQuery(sql_conn, args):
-    sql_conn = SQLConnection(sql_conn)
+    sql_conn = SQLConnection(sql_conn, os.environ.get("DB_DB"))
 
     venders, dtypes, products, page = getQueryFromArgs(args)
     sql_query = makeSQLQuery(venders=venders, dtypes=dtypes, products=products, page=page)

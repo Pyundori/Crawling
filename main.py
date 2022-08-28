@@ -65,7 +65,7 @@ def print_table_from_db(vender):
     return "".join(table)
 
 @app.route("/api/product_query", methods=["GET"])
-def test_query():
+def product_query():
     datas = src.GETCustomProductQuery(sql_conn, request.args)
 
     temp = [ {
@@ -88,18 +88,28 @@ def test_query():
     return response
 
 @app.route("/api/product_query/table")
-def test_query_table():
+def product_query_table():
     table = src.GETCustomProductQuery_Table(sql_conn, request.args)
     return "".join(table)
+
+# get
+# args
+#   column: id or name
+#   data: <str>
+@app.route("/api/user/check_dup")
+def verify_column():
+    args = request.args.to_dict()
+    res_code = src.checkDuplicated(args['column'], args['data'])
+    return {'code': res_code}
 
 @app.route("/test")
 def test():
     dtypes = ",".join(request.args.getlist('dtypes'))
-    # dtypes = args.get('dtypes').replace(" ", "")
     dtypes = dtypes.split(',') if (len(dtypes)!=0) else []
+
     venders = ",".join(request.args.getlist('venders'))
-    # venders = args.get('venders').replace(" ", "")
     venders = venders.split(',') if (len(venders)!=0) else []
+    
     return {'dtypes': dtypes, 'venders': venders}
 
 if __name__ == '__main__':

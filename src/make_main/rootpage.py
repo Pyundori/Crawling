@@ -37,7 +37,7 @@ def make_html_body(args):
     body.append(make_link(args['from_db_make_table']))
     body.append("<hr/>")
     body.append("<h1>쿼리문 만들어서 가져오기(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['from_db_select_query']}</p>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['from_db_select_query']} - GET</p>")
     body.append("<p>param: venders=&dtypes=&products=&page=</p>")
     body.append(params('query', args))
     body.append(return_value('query'))
@@ -46,10 +46,22 @@ def make_html_body(args):
     # body.append(make_form_query_table(args['from_db_select_query_table']))
     body.append("<hr/>")
     body.append("<h1>쿼리로 입력한 값이 DB에 있는지 확인(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['check_dup']}</p>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['check_dup']} - GET</p>")
     body.append("<p>param: column=&data=</p>")
     body.append(params('dup', args))
     body.append(return_value('dup'))
+    body.append("<hr/>")
+    body.append("<h1>회원가입(API)</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_up']} - POST</p>")
+    body.append("<p>param: { </p>")
+    body.append(f"<p>{SPACE}id: str, </p>")
+    body.append(f"<p>{SPACE}pw: str, </p>")
+    body.append(f"<p>{SPACE}name: str, </p>")
+    body.append(f"<p>{SPACE}email: str, </p>")
+    body.append("<p>} </p>")
+    body.append(params('signup', args))
+    body.append(return_value('signup'))
+
 
     return body
 
@@ -78,6 +90,14 @@ def return_value_dup():
         "}",
     ]
     return data
+
+def return_value_signup():
+    data = [
+        '{',
+        f'{SPACE}res_code: int - 201: append user to DB, 500: duplicate id/name in DB',
+        "}",
+    ]
+    return data
     
 def return_value(flag):
     ret = []
@@ -88,6 +108,8 @@ def return_value(flag):
         data = return_value_dup()
     elif flag == "query":
         data = return_value_query()
+    elif flag == "signup":
+        data = return_value_signup()
 
     for dat in data:
         ret.append(f"<p>{dat}</p>")
@@ -129,6 +151,18 @@ def params_dup(link):
 
     return form
 
+def params_signup(link):
+    form = f"<form action='{link}' method='POST'>\
+        <p>id= <input type='text' name='id' id='id'></p>\
+        <p>pw= <input type='text' name='pw' id='pw'></p>\
+        <p>name= <input type='text' name='name' id='name'></p>\
+        <p>email= <input type='text' name='email' id='email'></p>\
+        <p><input type='submit' value='제출' onclick='doNothing()'></p>\
+        </form>"
+
+    return form
+
+
 def params(flag, args):
     ret = []
     ret.append('<button type="button" class="collapsible">params</button>')
@@ -138,6 +172,8 @@ def params(flag, args):
         data = params_dup(args['check_dup'])
     elif flag == "query":
         data = params_query(args['from_db_select_query'])
+    elif flag == "signup":
+        data = params_signup(args['sign_up'])
 
     ret.append(data)
     ret.append("</div>")
@@ -151,6 +187,7 @@ def make_html(body):
     html += "<title>Flask app</title>"
     html += f"<link rel='stylesheet' type='text/css' href='{ url_for('static', filename='css.css') }'>"
     html += f"<script src='{ url_for('static', filename='func.js') }'></script>"
+    html += '<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>'
     html += "</head>"
     html += "<body>"
     html += "".join(body)

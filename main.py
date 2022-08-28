@@ -1,6 +1,7 @@
 import src
 from flask import Flask, request, Response, json, url_for
 import pymysql as mysql
+import json
 
 from dotenv import load_dotenv
 import os
@@ -26,6 +27,7 @@ def main():
         'from_db_select_query'          : "/api/product_query",
         'from_db_select_query_table'    : "/api/product_query/table",
         'check_dup'                     : "/api/user/check_dup",
+        'sign_up'                       : "/api/user/signup",
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -109,7 +111,12 @@ def verify_column():
 # post
 @app.route("/api/user/signup", methods=["POST"])
 def sign_up():
-    args = request.json
+    try:
+        data = request.json
+    except:
+        data = request.form
+    return data
+    args = json.loads(request.data)
     return src.signUp(args)
 
 @app.route("/test")

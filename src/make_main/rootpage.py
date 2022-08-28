@@ -61,7 +61,15 @@ def make_html_body(args):
     body.append("<p>} </p>")
     body.append(params('signup', args))
     body.append(return_value('signup'))
-
+    body.append("<hr/>")
+    body.append("<h1>로그인(API)</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_in']} - POST</p>")
+    body.append("<p>param: { </p>")
+    body.append(f"<p>{SPACE}id: str, </p>")
+    body.append(f"<p>{SPACE}pw: str, </p>")
+    body.append("<p>} </p>")
+    body.append(params('signin', args))
+    body.append(return_value('signin'))
 
     return body
 
@@ -98,6 +106,16 @@ def return_value_signup():
         "}",
     ]
     return data
+
+def return_value_signin():
+    data = [
+        '{',
+        f'{SPACE}res_code: int - 500: No user with id in DB, 501: PW isn\'t correct',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}201: login success',
+        f'{SPACE}data: "" - return when login failed, jwt_tolen - return when login success',
+        "}",
+    ]
+    return data
     
 def return_value(flag):
     ret = []
@@ -110,6 +128,8 @@ def return_value(flag):
         data = return_value_query()
     elif flag == "signup":
         data = return_value_signup()
+    elif flag == "signin":
+        data = return_value_signin()
 
     for dat in data:
         ret.append(f"<p>{dat}</p>")
@@ -153,15 +173,23 @@ def params_dup(link):
 
 def params_signup(link):
     form = f"<form action='{link}' method='POST'>\
-        <p>id= <input type='text' name='id' id='id'> - max len: 20</p>\
-        <p>pw= <input type='text' name='pw' id='pw'></p>\
-        <p>name= <input type='text' name='name' id='name'> - max len: 20(kor: 10)</p>\
-        <p>email= <input type='text' name='email' id='email'> - max len: 50</p>\
-        <p><input type='submit' value='제출' onclick='doNothing()'></p>\
+        <p>id= <input type='text' name='id'> - max len: 20</p>\
+        <p>pw= <input type='text' name='pw'></p>\
+        <p>name= <input type='text' name='name'> - max len: 20(kor: 10)</p>\
+        <p>email= <input type='text' name='email'> - max len: 50</p>\
+        <p><input type='submit' value='제출'></p>\
         </form>"
 
     return form
 
+def params_signin(link):
+    form = f"<form action='{link}' method='POST'>\
+        <p>id= <input type='text' name='id'></p>\
+        <p>pw= <input type='text' name='pw'></p>\
+        <p><input type='submit' value='제출'></p>\
+        </form>"
+
+    return form
 
 def params(flag, args):
     ret = []
@@ -174,6 +202,9 @@ def params(flag, args):
         data = params_query(args['from_db_select_query'])
     elif flag == "signup":
         data = params_signup(args['sign_up'])
+    elif flag == "signin":
+        data = params_signin(args['sign_in'])
+
 
     ret.append(data)
     ret.append("</div>")

@@ -21,18 +21,35 @@ vender_api = {
     "ministop"      : {'api': src.ministop_api,   'path': 'URL_MINISTOP'}, 
 }
 
-@app.route("/")
-def main():
+args = {}
+
+def setArgs():   
+    global args 
     args = {
         'from_db_select_query'          : "/api/product_query",
         'from_db_select_query_table'    : "/api/product_query/table",
         'check_dup'                     : "/api/user/check_dup",
         'sign_up'                       : "/api/user/signup",
+        'sign_in'                       : "/api/user/signin",
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
     args['from_db'] = [ path+'/fromdb' for path in args['from_server'] ]
     args['from_db_make_table'] = [ path+'/table' for path in args['from_db'] ]
+
+@app.route("/")
+def main():
+    """     args = {
+        'from_db_select_query'          : "/api/product_query",
+        'from_db_select_query_table'    : "/api/product_query/table",
+        'check_dup'                     : "/api/user/check_dup",
+        'sign_up'                       : "/api/user/signup",
+        'sign_in'                       : "/api/user/signin",
+    }
+
+    args['from_server'] = [ path for path in vender_api.keys() ]
+    args['from_db'] = [ path+'/fromdb' for path in args['from_server'] ]
+    args['from_db_make_table'] = [ path+'/table' for path in args['from_db'] ] """
 
     body = src.make_html_body(args)
     html = src.make_html(body)
@@ -137,4 +154,5 @@ def test():
     return {'dtypes': dtypes, 'venders': venders}
 
 if __name__ == '__main__':
+    setArgs()
     app.run(host="0.0.0.0", port=5000, debug=True)

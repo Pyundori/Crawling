@@ -76,4 +76,4 @@ def signIn(args):
 
     token = createJWT(id, pw)
 
-    return {'res_code': 201, 'data': row, 'token': token} # data insert success
+    return {'res_code': 201, 'data': token} # data insert success

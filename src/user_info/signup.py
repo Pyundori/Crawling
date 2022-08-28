@@ -6,10 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-encoded_string = 'a'.encode()
-hexdigest = hashlib.sha512(encoded_string).hexdigest()
-print('a:', hexdigest, len(hexdigest))
-
 def SQLConnection(sql_conn, database):
     sql_conn = sql_conn.connect(
             host        = 'localhost',   # 루프백주소, 자기자신주소

@@ -112,12 +112,19 @@ def verify_column():
 @app.route("/api/user/signup", methods=["POST"])
 def sign_up():
     try:
-        data = request.json
+        args = request.json
     except:
-        data = request.form
-    return data
-    args = json.loads(request.data)
+        args = request.form
     return src.signUp(args)
+
+
+@app.route("/api/user/signin", methods=["POST"])
+def sign_in():
+    try:
+        args = request.json
+    except:
+        args = request.form
+    return src.signIn(args)
 
 @app.route("/test")
 def test():

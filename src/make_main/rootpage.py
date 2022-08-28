@@ -153,10 +153,10 @@ def params_dup(link):
 
 def params_signup(link):
     form = f"<form action='{link}' method='POST'>\
-        <p>id= <input type='text' name='id' id='id'></p>\
+        <p>id= <input type='text' name='id' id='id'> - max len: 20</p>\
         <p>pw= <input type='text' name='pw' id='pw'></p>\
-        <p>name= <input type='text' name='name' id='name'></p>\
-        <p>email= <input type='text' name='email' id='email'></p>\
+        <p>name= <input type='text' name='name' id='name'> - max len: 20(kor: 10)</p>\
+        <p>email= <input type='text' name='email' id='email'> - max len: 50</p>\
         <p><input type='submit' value='제출' onclick='doNothing()'></p>\
         </form>"
 

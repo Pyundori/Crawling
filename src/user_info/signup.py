@@ -42,5 +42,5 @@ def checkDuplicated(column, data):
 def signIn():
     None
 
-print(checkDuplicated('id', 'asdf'))
-# checkDuplicatedId("asdf")
+if __name__ == "__main__":
+    print(checkDuplicated('id', 'asdf'))

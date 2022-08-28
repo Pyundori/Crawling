@@ -106,6 +106,12 @@ def verify_column():
     res_code = src.checkDuplicated(args['column'], args['data'])
     return {'res_code': res_code}
 
+# post
+@app.route("/api/user/signup", methods=["POST"])
+def sign_up():
+    args = request.json
+    return src.signUp(args)
+
 @app.route("/test")
 def test():
     dtypes = ",".join(request.args.getlist('dtypes'))

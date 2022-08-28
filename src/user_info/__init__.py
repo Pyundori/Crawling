@@ -1,1 +1,1 @@
-from .signup import checkDuplicated
+from .signup import checkDuplicated, signUp

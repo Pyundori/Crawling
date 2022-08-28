@@ -39,8 +39,31 @@ def checkDuplicated(column, data):
         return 201
     return 202
 
-def signUp():
-    None
+def signUp(args):
+    id = args.get('id')
+    pw = args.get('pw')
+    name = args.get('name')
+    email = args.get('email')
+    
+    if checkDuplicated('id', id) == 202 or checkDuplicated('name', name) == 202:
+        return {'res_code': 500} # same data in db, insert error
+
+    for _ in range(int(os.environ.get("SHA_REPEAT"))):
+        pw = hashlib.sha512(pw.encode()).hexdigest()
+
+    sql_conn = mysql
+    sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
+
+    sql = sql_conn.cursor()
+
+    sql_query = f"INSERT INTO `{os.environ.get('TABLE_USER')}`(id, pw, name, email) VALUES ('{id}', '{pw}', '{name}', '{email}')"
+
+    sql.execute(sql_query)
+    sql_conn.commit()
+
+    sql_conn.close()
+
+    return {'res_code': 201} # data insert success
 
 if __name__ == "__main__":
     print(checkDuplicated('id', 'asdf'))

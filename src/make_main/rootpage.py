@@ -70,7 +70,15 @@ def make_html_body(args):
     body.append(f"<p>{SPACE}token: str, </p>")
     body.append("<p>} </p>")
     body.append(params('signin', args))
-    body.append(return_value('signin'))    
+    body.append(return_value('signin'))
+    body.append("<hr/>")
+    body.append("<h1>유저 데이터 획득(API)</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['get_user']} - POST</p>")
+    body.append("<p>param: { </p>")
+    body.append(f"<p>{SPACE}token: str </p>")
+    body.append("<p>} </p>")
+    body.append(params('user_data', args))
+    body.append(return_value('user_data'))
     body.append("<hr/>")
     body.append("<h1>유저 데이터 변경(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['user_modify']} - POST</p>")
@@ -81,6 +89,7 @@ def make_html_body(args):
     body.append("<p>} </p>")
     body.append(params('user_modify', args))
     body.append(return_value('user_modify'))
+
 
     return body
 
@@ -130,6 +139,17 @@ def return_value_signin():
     ]
     return data
 
+def return_value_user_data():
+    data = [
+        '{',
+        f'{SPACE}res_code: 201',
+        f'{SPACE}id: str',
+        f'{SPACE}name: str',
+        f'{SPACE}email: str'
+        "}",
+    ]
+    return data
+
 def return_value_user_modify():
     data = [
         '{',
@@ -153,6 +173,8 @@ def return_value(flag):
         data = return_value_signup()
     elif flag == "signin":
         data = return_value_signin()
+    elif flag == "user_data":
+        data = return_value_user_data()
     elif flag == "user_modify":
         data = return_value_user_modify()
 
@@ -217,6 +239,14 @@ def params_signin(link):
         </form>"
 
     return form
+    
+def params_user_data(link):
+    form = f"<form action='{link}' method='POST'>\
+        <p>token= <input type='text' name='token'></p>\
+        <p><input type='submit' value='제출'></p>\
+        </form>"
+
+    return form
 
 def params_user_modify(link):
     form = f"<form action='{link}' method='POST'>\
@@ -241,6 +271,8 @@ def params(flag, args):
         data = params_signup(args['sign_up'])
     elif flag == "signin":
         data = params_signin(args['sign_in'])
+    elif flag == "user_data":
+        data = params_user_data(args['get_user'])
     elif flag == "user_modify":
         data = params_user_modify(args['user_modify'])
 

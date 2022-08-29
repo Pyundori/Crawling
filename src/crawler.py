@@ -10,7 +10,7 @@ def run():
     sql_conn = mysql
     toDatabase(sql_conn)
 
-def makeSQLDatas(vender, vender_name):
+def makeSQLDatas_main(vender, vender_name):
     datas = []
 
     for legend, legend_datas in vender.items():
@@ -38,6 +38,20 @@ def makeSQLDatas(vender, vender_name):
     
     return datas
 
+def makeSQLDatas_like(vender, vender_name):
+    datas = []
+
+    for legend, legend_datas in vender.items():
+        for product_name, product_data in legend_datas.items():
+            data = []
+            data.append(vender_name)
+            data.append(product_name)
+            data.append('0')
+
+            datas.append(data)
+    
+    return datas
+
 api_func = {
     "gs25": gs25_api,
     "seven_eleven": se_api,
@@ -55,13 +69,19 @@ api_path = {
 }
 
 def toDatabase(sql_conn):
-    datas = []
+    datas_main, datas_like = [], []
 
     for key, func in api_func.items():
         data = func(os.environ.get(api_path[key]))
-        datas += makeSQLDatas(data, key)
+        datas_main += makeSQLDatas_main(data, key)
+        datas_like += makeSQLDatas_like(data, key)
 
-    pushDataToDB(sql_conn, datas)
+    sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
+
+    pushDataToDB_main(sql_conn, datas_main)
+    pushDataToDB_like(sql_conn, datas_like)
+    
+    sql_conn.close()
 
 
 def SQLConnection(sql_conn, database):
@@ -75,8 +95,7 @@ def SQLConnection(sql_conn, database):
         )
     return sql_conn
 
-def pushDataToDB(sql_conn, datas):
-    sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
+def pushDataToDB_main(sql_conn, datas):
     sql = sql_conn.cursor()
 
     sql_query = f"TRUNCATE TABLE {os.environ.get('TABLE_CRAWLING')}"
@@ -93,18 +112,22 @@ def pushDataToDB(sql_conn, datas):
             sql_conn.commit()
             sql_data = []
             
-        sql_value = "("
-        sql_value += ",".join([ f'"{x}"' for x in data ])
-        sql_value += ")"
-
+        sql_value = "(" + ",".join([ f'"{x}"' for x in data ]) + ")"
         sql_data.append(sql_value)
 
     if len(sql_data) > 0:
-        sql_query += ", ".join(sql_data) + ";"
-        sql.execute(sql_query)
+        sql.execute(sql_query + ", ".join(sql_data) + ";")
         sql_conn.commit()
-    
-    sql_conn.close()
+
+def pushDataToDB_like(sql_conn, datas):
+    sql = sql_conn.cursor()
+
+    sql_query = f"INSERT IGNORE INTO {os.environ.get('TABLE_LIKE')}(vender, pName, `like`) VALUES "
+    sql_data = []
+
+    for data in datas:
+        sql.execute(sql_query + "(" + ", ".join([ f'"{x}"' for x in data ]) + ")" + ";")
+        sql_conn.commit()
 
 run()
 print(f"crawling end - {datetime.now()}")

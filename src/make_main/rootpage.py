@@ -93,7 +93,7 @@ def return_value_query():
 def return_value_dup():
     data = [
         '{',
-        f'{SPACE}res_code: int - 201: can craete this name/id, 202: cannot craete this name/id',
+        f'{SPACE}res_code: int - 201: can craete this name/id/email, 202: cannot craete this name/id/email',
         f'{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}400: cannot read properties, cause data value is \"\" or column value is \"\"',
         "}",
     ]
@@ -102,7 +102,7 @@ def return_value_dup():
 def return_value_signup():
     data = [
         '{',
-        f'{SPACE}res_code: int - 201: append user to DB, 500: duplicate id/name in DB',
+        f'{SPACE}res_code: int - 201: append user to DB, 500: duplicate id/name/email in DB',
         "}",
     ]
     return data
@@ -164,6 +164,7 @@ def params_dup(link):
         <p>column=\
         <label><input type='radio' name='column' value='id' checked='checked'>id</label>\
         <label><input type='radio' name='column' value='name'>name</label>\
+        <label><input type='radio' name='column' value='email'>email</label>\
         <p>data= <input type='text' name='data'></p>\
         <p><input type='submit' value='제출'></p>\
         </form>

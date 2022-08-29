@@ -31,6 +31,7 @@ def setArgs():
         'check_dup'                     : "/api/user/check_dup",
         'sign_up'                       : "/api/user/signup",
         'sign_in'                       : "/api/user/signin",
+        'get_user'                      : "/api/user/get",
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -39,18 +40,6 @@ def setArgs():
 
 @app.route("/")
 def main():
-    """     args = {
-        'from_db_select_query'          : "/api/product_query",
-        'from_db_select_query_table'    : "/api/product_query/table",
-        'check_dup'                     : "/api/user/check_dup",
-        'sign_up'                       : "/api/user/signup",
-        'sign_in'                       : "/api/user/signin",
-    }
-
-    args['from_server'] = [ path for path in vender_api.keys() ]
-    args['from_db'] = [ path+'/fromdb' for path in args['from_server'] ]
-    args['from_db_make_table'] = [ path+'/table' for path in args['from_db'] ] """
-
     body = src.make_html_body(args)
     html = src.make_html(body)
 
@@ -142,6 +131,12 @@ def sign_in():
     except:
         args = request.form
     return src.signIn(args)
+
+@app.route("/api/user/get", methods=["GET"])
+def get_user(): # POST 이용하여 json으로 받아야할까?
+    args = request.args
+    return args
+    None
 
 @app.route("/test")
 def test():

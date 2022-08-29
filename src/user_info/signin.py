@@ -37,6 +37,21 @@ def checkDuplicated(column, data):
         return 201
     return 202
 
+def sqlSelect(sql_query):
+    sql_conn = mysql
+    sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
+
+    sql = sql_conn.cursor()
+
+    sql.execute(sql_query)
+    row = sql.fetchone()
+
+    sql_conn.close()
+
+    return row
+
+    None
+
 def createJWT(id, pw):
     payload = {
         'id': id,
@@ -50,6 +65,25 @@ def createJWT(id, pw):
 def signIn(args):
     id = args.get('id')
     pw = args.get('pw')
+    token = args.get('token')
+
+    if token != "":
+        token_val = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=["HS256"])
+        
+        sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{token_val['id']}\'"
+        row = sqlSelect(sql_query)
+
+        if row == None:
+            return {'res_code': 502, 'data': ""} # invalid token
+        
+        t = token_val['pw']
+        for _ in range(int(os.environ.get("SHA_REPEAT"))):
+            t = hashlib.sha512(t.encode()).hexdigest()
+        
+        if t != row[0]:
+            return {'res_code': 502, 'data': ""} # invalid token
+
+        return {'res_code': 202, 'data': token} # valid token
     
     if checkDuplicated('id', id) == 201:
         return {'res_code': 500, 'data': ""} # not in database
@@ -59,21 +93,24 @@ def signIn(args):
     for _ in range(int(os.environ.get("SHA_REPEAT"))):
         t = hashlib.sha512(t.encode()).hexdigest()
 
-    sql_conn = mysql
+    sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id='{id}'"
+    row = sqlSelect(sql_query)
+
+    """sql_conn = mysql
     sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
 
     sql = sql_conn.cursor()
 
-    sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id='{id}'"
 
     sql.execute(sql_query)
     row = sql.fetchone()
 
+    sql_conn.close() """
+
+
     if t != row[0]:
         return {'res_code': 501, 'data': ""} # password is not correct
 
-    sql_conn.close()
-
     token = createJWT(id, pw)
 
-    return {'res_code': 201, 'data': token} # data insert success
+    return {'res_code': 201, 'data': token} # login

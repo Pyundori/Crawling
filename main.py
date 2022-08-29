@@ -107,7 +107,7 @@ def product_query_table():
 #   data: <str>
 @app.route("/api/user/check_dup", methods=["GET"])
 def verify_column():
-    args = request.args.to_dict()
+    args = request.args
     if args['data'] == "" or args['column'] == "": 
         return {'res_code': 400}    # 해당 데이터 추출 불가능. id나 name이 ""인 경우는 없다.
                                     # column값도 ""인 경우는 없다.

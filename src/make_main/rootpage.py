@@ -67,6 +67,7 @@ def make_html_body(args):
     body.append("<p>param: { </p>")
     body.append(f"<p>{SPACE}id: str, </p>")
     body.append(f"<p>{SPACE}pw: str, </p>")
+    body.append(f"<p>{SPACE}token: str, </p>")
     body.append("<p>} </p>")
     body.append(params('signin', args))
     body.append(return_value('signin'))
@@ -111,7 +112,8 @@ def return_value_signin():
     data = [
         '{',
         f'{SPACE}res_code: int - 500: No user with id in DB, 501: PW isn\'t correct',
-        f'{SPACE}{SPACE}{SPACE}{SPACE}201: login success',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}502: invalid token',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}201: login success, 202: valid token',
         f'{SPACE}data: "" - return when login failed, jwt_tolen - return when login success',
         "}",
     ]
@@ -187,6 +189,7 @@ def params_signin(link):
     form = f"<form action='{link}' method='POST'>\
         <p>id= <input type='text' name='id'></p>\
         <p>pw= <input type='text' name='pw'></p>\
+        <p>token= <input type='text' name='token'></p>\
         <p><input type='submit' value='제출'></p>\
         </form>"
 

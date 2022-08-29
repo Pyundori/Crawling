@@ -70,19 +70,19 @@ def signIn(args):
     token = args.get('token')
 
     if token != "":
-        token_val = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
+        payload = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
         
-        sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{token_val['id']}\'"
+        sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{payload['id']}\'"
         row = sqlSelect(sql_query)
 
         if row == None:
             return {'res_code': 502, 'data': ""} # invalid token
         
-        t = token_val['pw']
+        """         t = payload['pw']
         for _ in range(int(os.environ.get("SHA_REPEAT"))):
-            t = hashlib.sha512(t.encode()).hexdigest()
+            t = hashlib.sha512(t.encode()).hexdigest() """
         
-        if t != row[0]:
+        if payload['pw'] != row[0]:
             return {'res_code': 502, 'data': ""} # invalid token
 
         return {'res_code': 202, 'data': token} # valid token
@@ -91,7 +91,6 @@ def signIn(args):
         return {'res_code': 500, 'data': ""} # not in database
 
     t = pw
-
     for _ in range(int(os.environ.get("SHA_REPEAT"))):
         t = hashlib.sha512(t.encode()).hexdigest()
 

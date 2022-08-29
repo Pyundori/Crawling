@@ -58,7 +58,7 @@ def createJWT(id, pw):
         'pw': pw,
     }
 
-    token = jwt.encode(payload, os.environ.get("JWT_SECRET_KEY"), algorithm="HS256")
+    token = jwt.encode(payload, os.environ.get("JWT_SECRET_KEY"), algorithm=os.environ.get('JWT_ALGO'))
 
     return token
 
@@ -68,7 +68,7 @@ def signIn(args):
     token = args.get('token')
 
     if token != "":
-        token_val = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=["HS256"])
+        token_val = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
         
         sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{token_val['id']}\'"
         row = sqlSelect(sql_query)

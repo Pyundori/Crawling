@@ -83,11 +83,12 @@ def product_query():
         'pName': x[2],
         'pPrice': x[3],
         'pImg': x[4],
-    } for x in datas ]
+    } for x in datas['row'] ]
 
     res_code = 201 if len(temp) > 0 else 202
     ret_data = {
         'data': temp,
+        'data_cnt': datas['cnt'],
         'response_code': res_code,
     }
 
@@ -132,10 +133,13 @@ def sign_in():
         args = request.form
     return src.signIn(args)
 
-@app.route("/api/user/get", methods=["GET"])
+@app.route("/api/user/get", methods=["POST"])
 def get_user(): # POST 이용하여 json으로 받아야할까?
-    args = request.args
-    return args
+    try:
+        args = request.json
+    except:
+        args = request.form
+    return src.getUserDat(args)
     None
 
 @app.route("/test")

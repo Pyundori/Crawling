@@ -55,10 +55,31 @@ def makeSQLQuery(venders=[], dtypes=[], products=[], page=1):
     if len(product_list_query) > 0:
         product_list_query = " WHERE " + product_list_query
 
+
+    limit_query = queryWithLimit(sql_query_dtype, product_list_query, LIMIT)
+    cnt_query = queryWithCnt(sql_query_dtype, product_list_query)
+    # sql_query = \
+    # f"SELECT \
+    # A.vender, A.pType, A.pName, A.pPrice, A.pImg, A.gName, A.gPrice, A.gImg \
+    # FROM ({sql_query_dtype}) A" + product_list_query + LIMIT
+
+    return limit_query, cnt_query
+
+def queryWithLimit(sql_query_dtype, product_list_query, LIMIT):
     sql_query = \
     f"SELECT \
     A.vender, A.pType, A.pName, A.pPrice, A.pImg, A.gName, A.gPrice, A.gImg \
     FROM ({sql_query_dtype}) A" + product_list_query + LIMIT
+
+    return sql_query
+
+def queryWithCnt(sql_query_dtype, product_list_query):
+    sql_query = \
+    f"SELECT COUNT(*)\
+    FROM (\
+        SELECT * \
+        FROM ({sql_query_dtype}) A " + product_list_query + \
+    ") R"
 
     return sql_query
 
@@ -165,20 +186,22 @@ def GETCustomProductQuery(sql_conn, args):
     sql_conn = SQLConnection(sql_conn, os.environ.get("DB_DB"))
 
     venders, dtypes, products, page = getQueryFromArgs(args)
-    sql_query = makeSQLQuery(venders=venders, dtypes=dtypes, products=products, page=page)
-    print(sql_query)
+    limit_query, cnt_query = makeSQLQuery(venders=venders, dtypes=dtypes, products=products, page=page)
     
     sql = sql_conn.cursor()
-    sql.execute(sql_query)
 
+    sql.execute(limit_query)
     rows = sql.fetchall()
+
+    sql.execute(cnt_query)
+    cnt = sql.fetchone()[0]
 
     sql_conn.close()
 
-    return list(rows)
+    return {'row': list(rows), 'cnt': cnt}
 
 
 def GETCustomProductQuery_Table(sql_conn, args):
     datas = GETCustomProductQuery(sql_conn, args)
 
-    return makeTableFromDB(datas)
+    return makeTableFromDB(datas['row'])

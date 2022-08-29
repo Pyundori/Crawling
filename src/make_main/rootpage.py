@@ -78,6 +78,7 @@ def return_value_query():
     data = [
         '{',
         f'{SPACE}response_code: int - 201: searched data exists, 202: searched data not exists',
+        f'{SPACE}data_cnt: int - 쿼리의 전체 데이터 개수',
         f'{SPACE}data: [',
         f'{SPACE}{SPACE}%s' % "{",
         f'{SPACE}{SPACE}{SPACE}vender: str,',

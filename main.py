@@ -32,6 +32,7 @@ def setArgs():
         'sign_up'                       : "/api/user/signup",
         'sign_in'                       : "/api/user/signin",
         'get_user'                      : "/api/user/get",
+        'user_modify'                   : "/api/user/modify"
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -79,7 +80,7 @@ def product_query():
 
     temp = [ {
         'vender': x[0],
-        'dtype': x[1],
+        'dType': x[1],
         'pName': x[2],
         'pPrice': x[3],
         'pImg': x[4],
@@ -141,6 +142,14 @@ def get_user(): # POST 이용하여 json으로 받아야할까?
         args = request.form
     return src.getUserDat(args)
     None
+
+@app.route("/api/user/modify", methods=["PUT"])
+def modify_user(): # POST 이용하여 json으로 받아야할까?
+    try:
+        args = request.json
+    except:
+        args = request.form
+    return src.modifyUserDat(sql_conn, args)
 
 @app.route("/test")
 def test():

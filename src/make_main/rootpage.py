@@ -45,7 +45,7 @@ def make_html_body(args):
     # body.append("<h1>쿼리문 만들어서 가져오기(테이블 만들기)</h1>")
     # body.append(make_form_query_table(args['from_db_select_query_table']))
     body.append("<hr/>")
-    body.append("<h1>쿼리로 입력한 값이 DB에 있는지 확인(API)</h1>")
+    body.append("<h1>쿼리로 입력한 유저 데이터가 DB에 있는지 확인(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['check_dup']} - GET</p>")
     body.append("<p>param: column=&data=</p>")
     body.append(params('dup', args))
@@ -70,7 +70,17 @@ def make_html_body(args):
     body.append(f"<p>{SPACE}token: str, </p>")
     body.append("<p>} </p>")
     body.append(params('signin', args))
-    body.append(return_value('signin'))
+    body.append(return_value('signin'))    
+    body.append("<hr/>")
+    body.append("<h1>유저 데이터 변경(API)</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['user_modify']} - PUT</p>")
+    body.append("<p>param: { </p>")
+    body.append(f"<p>{SPACE}token: str </p>")
+    body.append(f"<p>{SPACE}col: str - pw or email, </p>")
+    body.append(f"<p>{SPACE}data: str </p>")
+    body.append("<p>} </p>")
+    body.append(params('user_modify', args))
+    body.append(return_value('user_modify'))
 
     return body
 
@@ -82,7 +92,7 @@ def return_value_query():
         f'{SPACE}data: [',
         f'{SPACE}{SPACE}%s' % "{",
         f'{SPACE}{SPACE}{SPACE}vender: str,',
-        f'{SPACE}{SPACE}{SPACE}dtype : str,',
+        f'{SPACE}{SPACE}{SPACE}dType : str,',
         f'{SPACE}{SPACE}{SPACE}pName	: str,',
         f'{SPACE}{SPACE}{SPACE}pPrice: int,',
         f'{SPACE}{SPACE}{SPACE}pImg  : str,',
@@ -119,6 +129,16 @@ def return_value_signin():
         "}",
     ]
     return data
+
+def return_value_user_modify():
+    data = [
+        '{',
+        f'{SPACE}res_code: int - 400: column value is not correct',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}201: modify succeed',
+        f'{SPACE}data: token - if changed => changed token, else => origin token',
+        "}",
+    ]
+    return data
     
 def return_value(flag):
     ret = []
@@ -133,6 +153,8 @@ def return_value(flag):
         data = return_value_signup()
     elif flag == "signin":
         data = return_value_signin()
+    elif flag == "user_modify":
+        data = return_value_user_modify()
 
     for dat in data:
         ret.append(f"<p>{dat}</p>")
@@ -196,6 +218,16 @@ def params_signin(link):
 
     return form
 
+def params_user_modify(link):
+    form = f"<form action='{link}' method='PUT'>\
+        <p>token= <input type='text' name='id'></p>\
+        <p>col= <input type='text' name='pw'></p>\
+        <p>data= <input type='text' name='token'></p>\
+        <p><input type='submit' value='제출'></p>\
+        </form>"
+
+    return form
+
 def params(flag, args):
     ret = []
     ret.append('<button type="button" class="collapsible">params</button>')
@@ -209,6 +241,8 @@ def params(flag, args):
         data = params_signup(args['sign_up'])
     elif flag == "signin":
         data = params_signin(args['sign_in'])
+    elif flag == "user_modify":
+        data = params_user_modify(args['user_modify'])
 
 
     ret.append(data)

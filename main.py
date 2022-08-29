@@ -143,8 +143,9 @@ def get_user(): # POST 이용하여 json으로 받아야할까?
     return src.getUserDat(args)
     None
 
-@app.route("/api/user/modify", methods=["PUT"])
+@app.route("/api/user/modify", methods=["POST"])
 def modify_user(): # POST 이용하여 json으로 받아야할까?
+    # PUT 안된다. 그냥 POST로 하자
     try:
         args = request.json
     except:

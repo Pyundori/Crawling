@@ -73,7 +73,7 @@ def make_html_body(args):
     body.append(return_value('signin'))    
     body.append("<hr/>")
     body.append("<h1>유저 데이터 변경(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['user_modify']} - PUT</p>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['user_modify']} - POST</p>")
     body.append("<p>param: { </p>")
     body.append(f"<p>{SPACE}token: str </p>")
     body.append(f"<p>{SPACE}col: str - pw or email, </p>")
@@ -219,10 +219,10 @@ def params_signin(link):
     return form
 
 def params_user_modify(link):
-    form = f"<form action='{link}' method='PUT'>\
-        <p>token= <input type='text' name='id'></p>\
-        <p>col= <input type='text' name='pw'></p>\
-        <p>data= <input type='text' name='token'></p>\
+    form = f"<form action='{link}' method='POST'>\
+        <p>token= <input type='text' name='token'></p>\
+        <p>col= <input type='text' name='col'></p>\
+        <p>data= <input type='text' name='data'></p>\
         <p><input type='submit' value='제출'></p>\
         </form>"
 

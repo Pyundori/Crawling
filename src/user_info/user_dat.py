@@ -23,8 +23,18 @@ def getUserDat(args):
 
     token_val = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
     id = token_val.get('id')
+    name = token_val.get('name')
+    email = token_val.get('email')
 
-    sql_conn = mysql
+    res = {
+        'res_code': 201,
+        'id': id,
+        'name': name,
+        'email': email,
+    }
+
+
+    """ sql_conn = mysql
     sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
 
     sql = sql_conn.cursor()
@@ -48,7 +58,7 @@ def getUserDat(args):
         'res_code': res_code,
         'name': name,
         'email': email,
-    }
+    } """
     return res
 
 def modifyDat(args):

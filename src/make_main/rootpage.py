@@ -38,7 +38,6 @@ def make_html_body(args):
     body.append("<hr/>")
     body.append("<h1>쿼리문 만들어서 가져오기(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['from_db_select_query']} - GET</p>")
-    body.append("<p>param: venders=&dtypes=&products=&page=</p>")
     body.append(params('query', args))
     body.append(return_value('query'))
     # body.append("<hr/>")
@@ -47,56 +46,31 @@ def make_html_body(args):
     body.append("<hr/>")
     body.append("<h1>쿼리로 입력한 유저 데이터가 DB에 있는지 확인(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['check_dup']} - GET</p>")
-    body.append("<p>param: column=&data=</p>")
     body.append(params('dup', args))
     body.append(return_value('dup'))
     body.append("<hr/>")
     body.append("<h1>회원가입(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_up']} - POST</p>")
-    body.append("<p>param: { </p>")
-    body.append(f"<p>{SPACE}id: str, </p>")
-    body.append(f"<p>{SPACE}pw: str, </p>")
-    body.append(f"<p>{SPACE}name: str, </p>")
-    body.append(f"<p>{SPACE}email: str, </p>")
-    body.append("<p>} </p>")
     body.append(params('signup', args))
     body.append(return_value('signup'))
     body.append("<hr/>")
     body.append("<h1>로그인(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_in']} - POST</p>")
-    body.append("<p>param: { </p>")
-    body.append(f"<p>{SPACE}id: str, </p>")
-    body.append(f"<p>{SPACE}pw: str, </p>")
-    body.append(f"<p>{SPACE}token: str, </p>")
-    body.append("<p>} </p>")
     body.append(params('signin', args))
     body.append(return_value('signin'))
     body.append("<hr/>")
     body.append("<h1>유저 데이터 획득(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['get_user']} - POST</p>")
-    body.append("<p>param: { </p>")
-    body.append(f"<p>{SPACE}token: str </p>")
-    body.append("<p>} </p>")
     body.append(params('user_data', args))
     body.append(return_value('user_data'))
     body.append("<hr/>")
     body.append("<h1>유저 데이터 변경(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['user_modify']} - POST</p>")
-    body.append("<p>param: { </p>")
-    body.append(f"<p>{SPACE}token: str </p>")
-    body.append(f"<p>{SPACE}col: str - pw or email, </p>")
-    body.append(f"<p>{SPACE}data: str </p>")
-    body.append("<p>} </p>")
     body.append(params('user_modify', args))
     body.append(return_value('user_modify'))
     body.append("<hr/>")
     body.append("<h1>상품 좋아요 변경(API)</h1>")
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['product_like']} - POST</p>")
-    body.append("<p>param: { </p>")
-    body.append(f"<p>{SPACE}vender: str </p>")
-    body.append(f"<p>{SPACE}pName: str</p>")
-    body.append(f"<p>{SPACE}flag: str </p>")
-    body.append("<p>} </p>")
     body.append(params('product_like', args))
     body.append(return_value('product_like'))
     body.append("<hr/>")
@@ -104,7 +78,6 @@ def make_html_body(args):
     body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['like_ranking']} - GET</p>")
     body.append(params('like_ranking', args))
     body.append(return_value('like_ranking'))
-
 
     return body
 
@@ -160,7 +133,7 @@ def return_value_user_data():
         f'{SPACE}res_code: 201',
         f'{SPACE}id: str',
         f'{SPACE}name: str',
-        f'{SPACE}email: str'
+        f'{SPACE}email: str',
         "}",
     ]
     return data
@@ -222,92 +195,94 @@ def return_value(flag):
 
 
 def params_query(link):
-    form = f"<form action='{link}' method='GET'>\
-        <p>venders=\
-        <label><input type='checkbox' name='venders' value='cu'>cu</label>\
-        <label><input type='checkbox' name='venders' value='gs25'>gs25</label>\
-        <label><input type='checkbox' name='venders' value='seven_eleven'>seven_eleven</label>\
-        <label><input type='checkbox' name='venders' value='emart24'>emart24</label>\
-        <label><input type='checkbox' name='venders' value='ministop'>ministop</label>\
-        <p>dtypes= \
-        <label><input type='checkbox' name='dtypes' value='1N1'>1N1</label>\
-        <label><input type='checkbox' name='dtypes' value='2N1'>2N1</label>\
-        <label><input type='checkbox' name='dtypes' value='3N1'>3N1</label>\
-        <label><input type='checkbox' name='dtypes' value='SALE'>SALE</label>\
-        <label><input type='checkbox' name='dtypes' value='GIFT'>GIFT</label>\
-        <p>products= <input type='text' name='products'> ex)products=옥수수 ex2)products=물</p>\
-        <p>page= <input type='text' name='page'> ex)page=1 ex2)page=10, 1 이상의 값</p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
+    form = f"""<form action='{link}' method='GET'>
+        <p>venders=
+        <label><input type='checkbox' name='venders' value='cu'>cu</label>
+        <label><input type='checkbox' name='venders' value='gs25'>gs25</label>
+        <label><input type='checkbox' name='venders' value='seven_eleven'>seven_eleven</label>
+        <label><input type='checkbox' name='venders' value='emart24'>emart24</label>
+        <label><input type='checkbox' name='venders' value='ministop'>ministop</label>
+          | type: str</p>
+        <p>dtypes= 
+        <label><input type='checkbox' name='dtypes' value='1N1'>1N1</label>
+        <label><input type='checkbox' name='dtypes' value='2N1'>2N1</label>
+        <label><input type='checkbox' name='dtypes' value='3N1'>3N1</label>
+        <label><input type='checkbox' name='dtypes' value='SALE'>SALE</label>
+        <label><input type='checkbox' name='dtypes' value='GIFT'>GIFT</label>
+          | type: str</p>
+        <p>products= <input type='text' name='products'>  | type: str</p>
+        <p>page= <input type='text' name='page'>  | type: int, 1 이상의 값</p>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
     return form
 
 def params_dup(link):
     form = f"""
-        <form action='{link}' method='GET'>\
-        <p>column=\
-        <label><input type='radio' name='column' value='id' checked='checked'>id</label>\
-        <label><input type='radio' name='column' value='name'>name</label>\
-        <label><input type='radio' name='column' value='email'>email</label>\
-        <p>data= <input type='text' name='data'></p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>
-    """
+        <form action='{link}' method='GET'>
+        <p>column=
+        <label><input type='radio' name='column' value='id' checked='checked'>id</label>
+        <label><input type='radio' name='column' value='name'>name</label>
+        <label><input type='radio' name='column' value='email'>email</label>
+          | type: str</p>
+        <p>data= <input type='text' name='data'>  | type: str</p>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
 
     return form
 
 def params_signup(link):
-    form = f"<form action='{link}' method='POST'>\
-        <p>id= <input type='text' name='id'> - max len: 20</p>\
-        <p>pw= <input type='text' name='pw'></p>\
-        <p>name= <input type='text' name='name'> - max len: 20(kor: 10)</p>\
-        <p>email= <input type='text' name='email'> - max len: 50</p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
+    form = f"""<form action='{link}' method='POST'>
+        <p>id= <input type='text' name='id'>  | type: str, max len: 20</p>
+        <p>pw= <input type='text' name='pw'></p>
+        <p>name= <input type='text' name='name'>  | type: str, max len: 20(kor: 10)</p>
+        <p>email= <input type='text' name='email'>  | type: str, max len: 50</p>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
 
     return form
 
 def params_signin(link):
-    form = f"<form action='{link}' method='POST'>\
-        <p>id= <input type='text' name='id'></p>\
-        <p>pw= <input type='text' name='pw'></p>\
-        <p>token= <input type='text' name='token'></p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
+    form = f"""<form action='{link}' method='POST'>
+        <p>id= <input type='text' name='id'>  | type: str</p>
+        <p>pw= <input type='text' name='pw'>  | type: str</p>
+        <p>token= <input type='text' name='token'>  | type: str</p>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
 
     return form
     
 def params_user_data(link):
-    form = f"<form action='{link}' method='POST'>\
-        <p>token= <input type='text' name='token'></p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
+    form = f"""<form action='{link}' method='POST'>
+        <p>token= <input type='text' name='token'>  | type: str</p>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
 
     return form
 
 def params_user_modify(link):
-    form = f"<form action='{link}' method='POST'>\
-        <p>token= <input type='text' name='token'></p>\
-        <p>col= <input type='text' name='col'></p>\
-        <p>data= <input type='text' name='data'></p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
+    form = f"""<form action='{link}' method='POST'>
+        <p>token= <input type='text' name='token'>  | type: str</p>
+        <p>col= <input type='text' name='col'>  | type: str, value: pw, email</p>
+        <p>data= <input type='text' name='data'> | type: str</p>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
 
     return form
 
 def params_product_like(link):
-    form = f"<form action='{link}' method='POST'>\
-        <p>vender= <input type='text' name='vender'></p>\
-        <p>pName= <input type='text' name='pName'></p>\
-        <p>flag= <input type='text' name='flag'></p>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
+    form = f"""<form action='{link}' method='POST'>
+        <p>vender= <input type='text' name='vender'>  | type: str</p>
+        <p>pName= <input type='text' name='pName'>  | type: str</p>
+        <p>flag= <input type='text' name='flag'>  | type: str, value: like or else..</p>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
 
     return form
 
 def params_product_like_ranking(link):
-    form = f"<form action='{link}' method='GET'>\
-        <p><input type='submit' value='제출'></p>\
-        </form>"
+    form = f"""<form action='{link}' method='GET'>
+        <p><input type='submit' value='제출'></p>
+        </form>"""
 
     return form
 
@@ -332,7 +307,6 @@ def params(flag, args):
         data = params_product_like(args['product_like'])
     elif flag == "like_ranking":
         data = params_product_like_ranking(args['like_ranking'])
-
 
     ret.append(data)
     ret.append("</div>")

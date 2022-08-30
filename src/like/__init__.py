@@ -1,1 +1,1 @@
-from .product_like import modifyProductLike
+from .product_like import modifyProductLike, getProductLikeList

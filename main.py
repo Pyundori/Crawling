@@ -165,6 +165,10 @@ def product_like():
     return src.modifyProductLike(sql_conn, args)
     return args
 
+@app.route("/api/product/ranking", methods=["GET"])
+def product_like_ranking():
+    return src.getProductLikeList(sql_conn)
+
 @app.route("/test")
 def test():
     dtypes = ",".join(request.args.getlist('dtypes'))

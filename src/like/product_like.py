@@ -20,21 +20,22 @@ def modifyProductLike(sql_conn, args):
     vender = args.get('vender')
     pName = args.get('pName').strip()
     flag = args.get('flag') # like or unlike
-    # pName='{pName}'
+    table = os.environ.get("TABLE_LIKE")
+
     sql_query = f"""
-UPDATE productLike
+UPDATE {table}
 SET `like`=`like`+({1 if flag == "like" else -1})
 WHERE
 	vender="{vender}" AND
 	pName= (SELECT R.pName
 				FROM (
 						SELECT pName
-						FROM productLike
+						FROM {table}
 						WHERE
 							INSTR(pName, "{pName}")>0 AND INSTR(vender, "{vender}")>0
 					) R
-				);
-    """
+				)
+    """ + ";"
 
     sql_conn = SQLConnection(sql_conn, os.environ.get("DB_DB"))
     sql = sql_conn.cursor()
@@ -42,10 +43,34 @@ WHERE
     sql.execute(sql_query)
     sql_conn.commit()
 
-    res_code = 201
-
     sql_conn.close()
+
+    res_code = 201
 
     return {'res_code': res_code}
 
+def getProductLikeList(sql_conn):
+    MAX_CNT = 10
+    table = os.environ.get("TABLE_LIKE")
+
+    sql_query = f"""Select *
+    From {table}
+    WHERE `like`>0
+    Order BY `like` desc
+    Limit {MAX_CNT}""" + ";"
+
+    sql_conn = SQLConnection(sql_conn, os.environ.get("DB_DB"))
+    sql = sql_conn.cursor()
+
+    sql.execute(sql_query)
+    rows = sql.fetchall()
+
+    sql_conn.close()
+
+    ranking = {}
+    for row in rows:
+        name = f"{row[0]}&{row[1]}"
+        ranking[name] = row[2]
+
+    return ranking
 

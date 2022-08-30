@@ -36,48 +36,45 @@ def make_html_body(args):
     body.append("<h1>데이터베이스에서 데이터 받아서 테이블로 출력</h1>")
     body.append(make_link(args['from_db_make_table']))
     body.append("<hr/>")
-    body.append("<h1>쿼리문 만들어서 가져오기(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['from_db_select_query']} - GET</p>")
+    body.append("<h1>쿼리문 만들어서 가져오기(API) - GET</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['from_db_select_query']}</p>")
     body.append(params('query', args))
     body.append(return_value('query'))
-    # body.append("<hr/>")
-    # body.append("<h1>쿼리문 만들어서 가져오기(테이블 만들기)</h1>")
-    # body.append(make_form_query_table(args['from_db_select_query_table']))
     body.append("<hr/>")
-    body.append("<h1>쿼리로 입력한 유저 데이터가 DB에 있는지 확인(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['check_dup']} - GET</p>")
+    body.append("<h1>쿼리로 입력한 유저 데이터가 DB에 있는지 확인(API) - GET</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['check_dup']}</p>")
     body.append(params('dup', args))
     body.append(return_value('dup'))
     body.append("<hr/>")
-    body.append("<h1>회원가입(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_up']} - POST</p>")
+    body.append("<h1>회원가입(API) - POST</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_up']}</p>")
     body.append(params('signup', args))
     body.append(return_value('signup'))
     body.append("<hr/>")
-    body.append("<h1>로그인(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_in']} - POST</p>")
+    body.append("<h1>로그인(API) - POST</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sign_in']}</p>")
     body.append(params('signin', args))
     body.append(return_value('signin'))
     body.append("<hr/>")
-    body.append("<h1>유저 데이터 획득(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['get_user']} - POST</p>")
-    body.append(params('user_data', args))
-    body.append(return_value('user_data'))
+    body.append("<h1>유저 데이터 획득(API) - POST</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['get_user']}</p>")
+    body.append(params('userdata', args))
+    body.append(return_value('userdata'))
     body.append("<hr/>")
-    body.append("<h1>유저 데이터 변경(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['user_modify']} - POST</p>")
-    body.append(params('user_modify', args))
-    body.append(return_value('user_modify'))
+    body.append("<h1>유저 데이터 변경(API) - POST</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['user_modify']}</p>")
+    body.append(params('usermodify', args))
+    body.append(return_value('usermodify'))
     body.append("<hr/>")
-    body.append("<h1>상품 좋아요 변경(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['product_like']} - POST</p>")
-    body.append(params('product_like', args))
-    body.append(return_value('product_like'))
+    body.append("<h1>상품 좋아요 변경(API) - POST</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['product_like']}</p>")
+    body.append(params('productlike', args))
+    body.append(return_value('productlike'))
     body.append("<hr/>")
-    body.append("<h1>상품 좋아요 랭킹(API)</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['like_ranking']} - GET</p>")
-    body.append(params('like_ranking', args))
-    body.append(return_value('like_ranking'))
+    body.append("<h1>상품 좋아요 랭킹(API) - GET</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['like_ranking']}</p>")
+    body.append(params('likeranking', args))
+    body.append(return_value('likeranking'))
 
     return body
 
@@ -178,13 +175,13 @@ def return_value(flag):
         data = return_value_signup()
     elif flag == "signin":
         data = return_value_signin()
-    elif flag == "user_data":
+    elif flag == "userdata":
         data = return_value_user_data()
-    elif flag == "user_modify":
+    elif flag == "usermodify":
         data = return_value_user_modify()
-    elif flag == "product_like":
+    elif flag == "productlike":
         data = return_value_product_like()
-    elif flag == "like_ranking":
+    elif flag == "likeranking":
         data = return_value_product_like_ranking()
 
     for dat in data:
@@ -299,13 +296,13 @@ def params(flag, args):
         data = params_signup(args['sign_up'])
     elif flag == "signin":
         data = params_signin(args['sign_in'])
-    elif flag == "user_data":
+    elif flag == "userdata":
         data = params_user_data(args['get_user'])
-    elif flag == "user_modify":
+    elif flag == "usermodify":
         data = params_user_modify(args['user_modify'])
-    elif flag == "product_like":
+    elif flag == "productlike":
         data = params_product_like(args['product_like'])
-    elif flag == "like_ranking":
+    elif flag == "likeranking":
         data = params_product_like_ranking(args['like_ranking'])
 
     ret.append(data)

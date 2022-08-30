@@ -49,13 +49,13 @@ def POSTRequestAPI_Ministop(url):
                 if leg[0] == 'add':
                     gift = {}
                     img = img_path + f"{product[6].split(']')[1].split('_')[0]}.{product[6]}"
-                    gift[product[3].split(" ")[0]] = {'price': int(product[4]), 'img': img}
+                    gift[product[3].split(" ")[0].strip()] = {'price': int(product[4]), 'img': img}
                     img = img_path + f"{product[5].split(']')[1].split('_')[0]}.{product[5]}"
-                    tabs[product[1]] = {'price': int(product[2]), 'img': img, 'gift': gift}
+                    tabs[product[1].strip()] = {'price': int(product[2]), 'img': img, 'gift': gift}
 
                 else:    
                     img = img_path + f"{product[-1].split(']')[1].split('_')[0]}.{product[-1]}"
-                    tabs[product[-5]] = {'price': int(product[-4]), 'img': img, 'gift': gift}
+                    tabs[product[-5].strip()] = {'price': int(product[-4]), 'img': img, 'gift': gift}
             
             l.append(x+1)
 

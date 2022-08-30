@@ -32,7 +32,7 @@ def GETRequestAPI_Gs25(url):
         responses = json.loads(requests.get(url=api_url).json())['results']
         for data in responses:
             gift = None
-            product_name = data['goodsNm']
+            product_name = data['goodsNm'].strip()
             product_img = data['attFileNm']
             product_price = data['price']
             if type(product_price) == float:
@@ -42,7 +42,7 @@ def GETRequestAPI_Gs25(url):
 
             if param == "GIFT":
                 gift = {}
-                gift_name = data['giftGoodsNm']
+                gift_name = data['giftGoodsNm'].strip()
                 gift_img = data['giftAttFileNm']
                 gift_price =  data['giftPrice']
                 if type(gift_price) == float:

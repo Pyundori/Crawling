@@ -50,7 +50,7 @@ def POSTRequestAPI_Cu(url):
 
             for li in ul.select('li'):
                 gift = None
-                product_name = li.select_one('.prod_text .name p').text
+                product_name = li.select_one('.prod_text .name p').text.strip()
                 product_price = li.select_one('.prod_text .price strong').text.replace(",", "")
                 product_price = int(product_price)
                 product_img = li.select_one(".prod_img img")['src']

@@ -75,8 +75,7 @@ def getProductLikeList(sql_conn):
         ) PL
         NATURAL JOIN
         {os.environ.get("TABLE_CRAWLING")}
-    ;
-    """
+    """ + ";"
 
 
     sql_conn = SQLConnection(sql_conn, os.environ.get("DB_DB"))

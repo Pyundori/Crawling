@@ -32,7 +32,9 @@ def setArgs():
         'sign_up'                       : "/api/user/signup",
         'sign_in'                       : "/api/user/signin",
         'get_user'                      : "/api/user/get",
-        'user_modify'                   : "/api/user/modify"
+        'user_modify'                   : "/api/user/modify",
+        'product_like'                  : "/api/product/like",
+
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -151,6 +153,17 @@ def modify_user(): # POST 이용하여 json으로 받아야할까?
     except:
         args = request.form
     return src.modifyUserDat(sql_conn, args)
+
+@app.route("/api/product/like", methods=["POST"])
+def product_like():
+    try:
+        args = request.json
+    except:
+        args = request.form
+
+
+    return src.modifyProductLike(sql_conn, args)
+    return args
 
 @app.route("/test")
 def test():

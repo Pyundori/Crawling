@@ -89,6 +89,16 @@ def make_html_body(args):
     body.append("<p>} </p>")
     body.append(params('user_modify', args))
     body.append(return_value('user_modify'))
+    body.append("<hr/>")
+    body.append("<h1>상품 좋아요 변경(API)</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['product_like']} - POST</p>")
+    body.append("<p>param: { </p>")
+    body.append(f"<p>{SPACE}vender: str </p>")
+    body.append(f"<p>{SPACE}pName: str</p>")
+    body.append(f"<p>{SPACE}flag: str </p>")
+    body.append("<p>} </p>")
+    body.append(params('product_like', args))
+    body.append(return_value('product_like'))
 
 
     return body
@@ -159,6 +169,14 @@ def return_value_user_modify():
         "}",
     ]
     return data
+
+def return_value_product_like():
+    data = [
+        '{',
+        f'{SPACE}res_code: int - 201: change successful, 400: change failed',
+        "}",
+    ]
+    return data
     
 def return_value(flag):
     ret = []
@@ -177,6 +195,8 @@ def return_value(flag):
         data = return_value_user_data()
     elif flag == "user_modify":
         data = return_value_user_modify()
+    elif flag == "product_like":
+        data = return_value_product_like()
 
     for dat in data:
         ret.append(f"<p>{dat}</p>")
@@ -258,6 +278,16 @@ def params_user_modify(link):
 
     return form
 
+def params_product_like(link):
+    form = f"<form action='{link}' method='POST'>\
+        <p>vender= <input type='text' name='vender'></p>\
+        <p>pName= <input type='text' name='pName'></p>\
+        <p>flag= <input type='text' name='flag'></p>\
+        <p><input type='submit' value='제출'></p>\
+        </form>"
+
+    return form
+
 def params(flag, args):
     ret = []
     ret.append('<button type="button" class="collapsible">params</button>')
@@ -275,6 +305,8 @@ def params(flag, args):
         data = params_user_data(args['get_user'])
     elif flag == "user_modify":
         data = params_user_modify(args['user_modify'])
+    elif flag == "product_like":
+        data = params_product_like(args['product_like'])
 
 
     ret.append(data)

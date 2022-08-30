@@ -99,6 +99,11 @@ def make_html_body(args):
     body.append("<p>} </p>")
     body.append(params('product_like', args))
     body.append(return_value('product_like'))
+    body.append("<hr/>")
+    body.append("<h1>상품 좋아요 랭킹(API)</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['like_ranking']} - GET</p>")
+    body.append(params('like_ranking', args))
+    body.append(return_value('like_ranking'))
 
 
     return body
@@ -177,6 +182,15 @@ def return_value_product_like():
         "}",
     ]
     return data
+
+def return_value_product_like_ranking():
+    data = [
+        '{',
+        f'{SPACE}&lt;vender&gt;&&lt;product_name&gt;: int , key를 &로 분해하여 사용',
+        '...',
+        "}",
+    ]
+    return data
     
 def return_value(flag):
     ret = []
@@ -197,6 +211,8 @@ def return_value(flag):
         data = return_value_user_modify()
     elif flag == "product_like":
         data = return_value_product_like()
+    elif flag == "like_ranking":
+        data = return_value_product_like_ranking()
 
     for dat in data:
         ret.append(f"<p>{dat}</p>")
@@ -288,6 +304,13 @@ def params_product_like(link):
 
     return form
 
+def params_product_like_ranking(link):
+    form = f"<form action='{link}' method='GET'>\
+        <p><input type='submit' value='제출'></p>\
+        </form>"
+
+    return form
+
 def params(flag, args):
     ret = []
     ret.append('<button type="button" class="collapsible">params</button>')
@@ -307,6 +330,8 @@ def params(flag, args):
         data = params_user_modify(args['user_modify'])
     elif flag == "product_like":
         data = params_product_like(args['product_like'])
+    elif flag == "like_ranking":
+        data = params_product_like_ranking(args['like_ranking'])
 
 
     ret.append(data)

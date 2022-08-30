@@ -34,6 +34,7 @@ def setArgs():
         'get_user'                      : "/api/user/get",
         'user_modify'                   : "/api/user/modify",
         'product_like'                  : "/api/product/like",
+        'like_ranking'                  : "/api/product/ranking"
 
     }
 

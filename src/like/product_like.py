@@ -53,11 +53,31 @@ def getProductLikeList(sql_conn):
     MAX_CNT = 10
     table = os.environ.get("TABLE_LIKE")
 
-    sql_query = f"""Select *
-    From {table}
-    WHERE `like`>0
-    Order BY `like` desc
-    Limit {MAX_CNT}""" + ";"
+    # vender, pName, like
+    # sql_query = f"""Select *
+    # From {table}
+    # WHERE `like`>0
+    # Order BY `like` desc
+    # Limit {MAX_CNT}""" + ";"
+
+    # ranking = {}
+    # for row in rows:
+    #     name = f"{row[0]}&{row[1]}"
+    #     ranking[name] = row[2]
+
+    sql_query = f"""
+    SELECT vender, pType, pName, pPrice, pImg, `like` 
+    FROM 
+        (SELECT *
+            FROM {os.environ.get("TABLE_LIKE")}
+            WHERE `like`>0
+            LIMIT {MAX_CNT}
+        ) PL
+        NATURAL JOIN
+        {os.environ.get("TABLE_CRAWLING")}
+    ;
+    """
+
 
     sql_conn = SQLConnection(sql_conn, os.environ.get("DB_DB"))
     sql = sql_conn.cursor()
@@ -69,8 +89,8 @@ def getProductLikeList(sql_conn):
 
     ranking = {}
     for row in rows:
-        name = f"{row[0]}&{row[1]}"
-        ranking[name] = row[2]
+        name = f"{row[0]}&{row[2]}"
+        ranking[name] = {'pType': row[1], 'pPrice': row[3], 'pImg': row[4], 'like': row[5]}
 
     return ranking
 

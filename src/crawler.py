@@ -97,7 +97,7 @@ def SQLConnection(sql_conn, database):
 
 def pushDataToDB_main(sql_conn, datas):
     sql = sql_conn.cursor()
-
+ 
     sql_query = f"TRUNCATE TABLE {os.environ.get('TABLE_CRAWLING')}"
     sql.execute(sql_query)
     sql_conn.commit()
@@ -126,6 +126,7 @@ def pushDataToDB_like(sql_conn, datas):
     sql_data = []
 
     for data in datas:
+        # f"""({", ".join([ f'"{x}"' for x in data ])})""" + ";"
         sql.execute(sql_query + "(" + ", ".join([ f'"{x}"' for x in data ]) + ")" + ";")
         sql_conn.commit()
 

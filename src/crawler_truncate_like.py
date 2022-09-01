@@ -1,4 +1,4 @@
-import PyMySql as mysql
+import pymysql as mysql
 
 import os
 from dotenv import load_dotenv

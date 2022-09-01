@@ -22,6 +22,7 @@ def GetGs25Token():
 def GETRequestAPI_Gs25(url):
     token = GetGs25Token()
     datas = {}
+    # , "GIFT"
     for param in ['ONE_TO_ONE', 'TWO_TO_ONE', "GIFT"]:
         tabs = {}
         params = f'pageNum=1&pageSize=10000&searchType=&searchWord=&parameterList={param}'
@@ -42,13 +43,25 @@ def GETRequestAPI_Gs25(url):
 
             if param == "GIFT":
                 gift = {}
-                gift_name = data['giftGoodsNm'].strip()
-                gift_img = data['giftAttFileNm']
-                gift_price =  data['giftPrice']
-                if type(gift_price) == float:
-                    gift_price = int(gift_price)
-                elif type(gift_price) == str:
-                    gift_price = gift_price.split(".")[0]
+                try:
+                    gift_name = data['giftGoodsNm'].strip()
+                except:
+                    gift_name = "null"
+
+                try:
+                    gift_img = data['giftAttFileNm']
+                except:
+                    gift_img = "null"
+
+                try:
+                    gift_price =  data['giftPrice']
+
+                    if type(gift_price) == float:
+                        gift_price = int(gift_price)
+                    elif type(gift_price) == str:
+                        gift_price = gift_price.split(".")[0]
+                except:
+                    gift_price = 0
 
                 gift[gift_name] = {'price': gift_price, 'img': gift_img}
             

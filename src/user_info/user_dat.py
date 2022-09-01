@@ -19,10 +19,43 @@ def SQLConnection(sql_conn, database):
         )
     return sql_conn
 
+def sqlSelect(sql_query):
+    sql_conn = mysql
+    sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
+
+    sql = sql_conn.cursor()
+
+    sql.execute(sql_query)
+    row = sql.fetchone()
+
+    sql_conn.close()
+
+    return row
+
+def isValidToken(token):
+    try:
+        payload = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
+    except:
+        return False
+
+    sql_query = f"""SELECT `token` FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{payload['id']}\'"""
+    token_db = sqlSelect(sql_query)
+
+    return token.split(".")[-1] == token_db[0], payload
+
 def getUserDat(args):
     token = args.get('token')
 
-    payload = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
+    valid, payload = isValidToken(token)
+    if not valid:
+        res = {
+            'res_code': 400,
+            'id': "",
+            'name': "",
+            'email': "",
+        }
+        return res
+
     id = payload.get('id')
     name = payload.get('name')
     email = payload.get('email')

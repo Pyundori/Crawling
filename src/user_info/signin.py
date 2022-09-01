@@ -50,8 +50,6 @@ def sqlSelect(sql_query):
 
     return row
 
-    None
-
 def createJWT(id, pw, name, email):
     payload = {
         'id': id,
@@ -64,26 +62,46 @@ def createJWT(id, pw, name, email):
 
     return token
 
+def isValidToken(token):
+    try:
+        payload = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
+    except:
+        return False
+
+    sql_query = f"""SELECT `token` FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{payload['id']}\'"""
+    token_db = sqlSelect(sql_query)
+
+    return token.split(".")[-1] == token_db[0]
+
+def isInDB(token):
+    payload = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
+
+    sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{payload['id']}\'"
+    row = sqlSelect(sql_query)
+
+    return row is not None and payload['pw'] == row[0]
+
 def signIn(args):
     id = args.get('id')
     pw = args.get('pw')
     token = args.get('token')
 
     if token != "":
-        payload = jwt.decode(token, os.environ.get('JWT_SECRET_KEY'), algorithms=[os.environ.get('JWT_ALGO')])
-        
-        sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{payload['id']}\'"
+
+        if not isValidToken(token):
+            return {'res_code': 502, 'data': ""} # invalid token
+
+        if not isInDB(token):
+            return {'res_code': 502, 'data': ""} # invalid token
+
+        """         sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{payload['id']}\'"
         row = sqlSelect(sql_query)
 
         if row == None:
             return {'res_code': 502, 'data': ""} # invalid token
         
-        """         t = payload['pw']
-        for _ in range(int(os.environ.get("SHA_REPEAT"))):
-            t = hashlib.sha512(t.encode()).hexdigest() """
-        
         if payload['pw'] != row[0]:
-            return {'res_code': 502, 'data': ""} # invalid token
+            return {'res_code': 502, 'data': ""} # invalid token """
 
         return {'res_code': 202, 'data': token} # valid token
     

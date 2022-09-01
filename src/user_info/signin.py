@@ -94,15 +94,6 @@ def signIn(args):
         if not isInDB(token):
             return {'res_code': 502, 'data': ""} # invalid token
 
-        """         sql_query = f"SELECT pw FROM `{os.environ.get('TABLE_USER')}` WHERE id=\'{payload['id']}\'"
-        row = sqlSelect(sql_query)
-
-        if row == None:
-            return {'res_code': 502, 'data': ""} # invalid token
-        
-        if payload['pw'] != row[0]:
-            return {'res_code': 502, 'data': ""} # invalid token """
-
         return {'res_code': 202, 'data': token} # valid token
     
     if checkDuplicated('id', id) == 201:

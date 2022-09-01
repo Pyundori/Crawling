@@ -1,5 +1,6 @@
 import hashlib
 import pymysql as mysql
+import jwt
 
 import os
 from dotenv import load_dotenv
@@ -41,12 +42,22 @@ def signUp(args):
     for _ in range(int(os.environ.get("SHA_REPEAT"))):
         pw = hashlib.sha512(pw.encode()).hexdigest()
 
+    payload = {
+        'id': id,
+        'pw': pw,
+        'name': name,
+        'email': email,
+    }
+
+    token = jwt.encode(payload, os.environ.get("JWT_SECRET_KEY"), algorithm=os.environ.get('JWT_ALGO'))
+    token = token.split(".")[-1]
+
     sql_conn = mysql
     sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
 
     sql = sql_conn.cursor()
     try:
-        sql_query = f"INSERT INTO `{os.environ.get('TABLE_USER')}`(id, pw, name, email) VALUES ('{id}', '{pw}', '{name}', '{email}')"
+        sql_query = f"INSERT INTO `{os.environ.get('TABLE_USER')}`(id, pw, name, email, `token`) VALUES ('{id}', '{pw}', '{name}', '{email}', '{token}')"
 
         sql.execute(sql_query)
         sql_conn.commit()

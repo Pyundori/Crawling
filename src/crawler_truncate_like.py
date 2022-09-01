@@ -24,8 +24,12 @@ def truncateTable(sql_conn):
     sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
     sql = sql_conn.cursor()
 
-    sql_query = f"TRUNCATE TABLE {os.environ.get('TABLE_LIKE')}"
+    sql_query = f"TRUNCATE TABLE {os.environ.get('TABLE_LIKE')}" + ";"
     sql.execute(sql_query)
-    sql_conn.commit()
+
+    sql_conn.close()
 
 # crontab -e > 0 19 1 * * <python_path> <source_code_path>
+
+if __name__ == "__main__":
+    run()

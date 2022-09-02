@@ -117,9 +117,9 @@ def return_value_signin():
     data = [
         '{',
         f'{SPACE}res_code: int - 500: No user with id in DB, 501: PW isn\'t correct',
-        f'{SPACE}{SPACE}{SPACE}{SPACE}502: invalid token',
-        f'{SPACE}{SPACE}{SPACE}{SPACE}201: login success, 202: valid token',
-        f'{SPACE}data: "" - return when login failed, jwt_tolen - return when login success',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}502: invalid token',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}201: login success, 202: valid token',
+        f'{SPACE}token: "" - return when login failed, jwt_tolen - return when login success',
         "}",
     ]
     return data
@@ -127,7 +127,7 @@ def return_value_signin():
 def return_value_user_data():
     data = [
         '{',
-        f'{SPACE}res_code: 201',
+        f'{SPACE}res_code: int - 201: token valid, 400: token invalid',
         f'{SPACE}id: str',
         f'{SPACE}name: str',
         f'{SPACE}email: str',
@@ -138,8 +138,8 @@ def return_value_user_data():
 def return_value_user_modify():
     data = [
         '{',
-        f'{SPACE}res_code: int - 400: column value is not correct',
-        f'{SPACE}{SPACE}{SPACE}{SPACE}201: modify succeed',
+        f'{SPACE}res_code: int - 400: column value is not correct, 500: invalid token',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}201: modify succeed',
         f'{SPACE}data: token - if changed => changed token, else => origin token',
         "}",
     ]

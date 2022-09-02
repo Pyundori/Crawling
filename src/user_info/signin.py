@@ -89,15 +89,15 @@ def signIn(args):
     if token != "":
 
         if not isValidToken(token):
-            return {'res_code': 502, 'data': ""} # invalid token
+            return {'res_code': 502, 'token': ""} # invalid token
 
         if not isInDB(token):
-            return {'res_code': 502, 'data': ""} # invalid token
+            return {'res_code': 502, 'token': ""} # invalid token
 
-        return {'res_code': 202, 'data': token} # valid token
+        return {'res_code': 202, 'token': token} # valid token
     
     if checkDuplicated('id', id) == 201:
-        return {'res_code': 500, 'data': ""} # not in database
+        return {'res_code': 500, 'token': ""} # not in database
 
     t = pw
     for _ in range(int(os.environ.get("SHA_REPEAT"))):
@@ -107,8 +107,8 @@ def signIn(args):
     row = sqlSelect(sql_query)
 
     if t != row[1]:
-        return {'res_code': 501, 'data': ""} # password is not correct
+        return {'res_code': 501, 'token': ""} # password is not correct
 
     token = createJWT(row[0], row[1], row[2], row[3])
 
-    return {'res_code': 201, 'data': token} # login
+    return {'res_code': 201, 'token': token} # login

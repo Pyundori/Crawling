@@ -47,6 +47,7 @@ def signUp(args):
         'pw': pw,
         'name': name,
         'email': email,
+        'login': 'local',
     }
 
     token = jwt.encode(payload, os.environ.get("JWT_SECRET_KEY"), algorithm=os.environ.get('JWT_ALGO'))

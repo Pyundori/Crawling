@@ -79,12 +79,25 @@ def return_value_product_like():
 def return_value_product_like_ranking():
     data = [
         '{',
-        f'{SPACE}&lt;vender&gt;&&lt;product_name&gt;: int , key를 &로 분해하여 사용',
-        '...',
+        f'{SPACE}&lt;vender&gt;&&lt;product_name&gt; &#123;: str , key를 &로 분해하여 사용',
+        f'{SPACE}{SPACE}like: int',
+        f'{SPACE}{SPACE}pImg: str',
+        f'{SPACE}{SPACE}pPrice: int',
+        f'{SPACE}{SPACE}pType: str',
+        f'{SPACE}&#125;, ...',
+        '}'
+    ]
+    return data
+
+def return_value_sns_login_kakao():
+    data = [
+        '{',
+        f"{SPACE}res_code: int,  201 - register successful, 202 - already exist"
+        f"{SPACE}token: str",
         "}",
     ]
     return data
-    
+
 def return_value(flag):
     ret = []
     ret.append('<button type="button" class="collapsible">return value</button>')
@@ -106,6 +119,8 @@ def return_value(flag):
         data = return_value_product_like()
     elif flag == "likeranking":
         data = return_value_product_like_ranking()
+    elif flag == "snsloginkakao":
+        data = return_value_sns_login_kakao()
 
     for dat in data:
         ret.append(f"<p>{dat}</p>")

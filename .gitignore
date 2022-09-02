@@ -132,3 +132,5 @@ test_json/
 nohup.out
 
 test.py
+
+templates/

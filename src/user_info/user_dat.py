@@ -53,18 +53,21 @@ def getUserDat(args):
             'id': "",
             'name': "",
             'email': "",
+            'login': "",
         }
         return res
 
     id = payload.get('id')
     name = payload.get('name')
     email = payload.get('email')
+    login = payload.get('login')
 
     res = {
         'res_code': 201,
         'id': id,
         'name': name,
         'email': email,
+        'login': login,
     }
 
     return res

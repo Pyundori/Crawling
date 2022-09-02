@@ -50,12 +50,13 @@ def sqlSelect(sql_query):
 
     return row
 
-def createJWT(id, pw, name, email):
+def createJWT(id, pw, name, email, login):
     payload = {
         'id': id,
         'pw': pw,
         'name': name,
         'email': email,
+        'login': login
     }
 
     token = jwt.encode(payload, os.environ.get("JWT_SECRET_KEY"), algorithm=os.environ.get('JWT_ALGO'))
@@ -103,12 +104,12 @@ def signIn(args):
     for _ in range(int(os.environ.get("SHA_REPEAT"))):
         t = hashlib.sha512(t.encode()).hexdigest()
 
-    sql_query = f"SELECT id, pw, name, email FROM `{os.environ.get('TABLE_USER')}` WHERE id='{id}'"
+    sql_query = f"SELECT id, pw, name, email, type FROM `{os.environ.get('TABLE_USER')}` WHERE id='{id}'"
     row = sqlSelect(sql_query)
 
     if t != row[1]:
         return {'res_code': 501, 'token': ""} # password is not correct
 
-    token = createJWT(row[0], row[1], row[2], row[3])
+    token = createJWT(row[0], row[1], row[2], row[3], row[4])
 
     return {'res_code': 201, 'token': token} # login

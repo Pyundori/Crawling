@@ -182,6 +182,24 @@ def sns_login(login):
     res_data = src.snsLogin(id, email, login)
     return res_data
 
+@app.route("/kakao/oauth2/callback", methods=["GET", "POST"])
+def kakao_auth():
+    import requests
+
+    token = request.json.get('token')
+    url = 'https://kapi.kakao.com/v2/user/me'
+
+    headers = {
+        "Authorization": f"""Bearer {token}"""
+    }
+    res = requests.get(url, headers=headers).json()
+
+    id, email = res['id'], res['kakao_account']['email']
+    res_data = src.snsLogin(id, email, 'kakao')
+
+    return res_data
+
+
 if __name__ == '__main__':
     setArgs()
     app.run(host="0.0.0.0", port=5000, debug=True)

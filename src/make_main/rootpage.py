@@ -55,13 +55,13 @@ def make_html_body(args, vender_api):
     table = []
 
     db_cnt = crawled_status(vender_api)
-    table.append(f"""<table align = "center" border="1">""")
-    table.append("<tr>")
-    table.append("".join([ f"""<td>{x}</td>""" for x in db_cnt.keys() ]))
-    table.append("</tr>")
-    table.append("<tr>")
-    table.append("".join([ f"""<td>{x}</td>""" for x in db_cnt.values() ]))
-    table.append("</tr>")
+    head = f"""<th colspan={len(vender_api)}>DB 점유율</th>"""
+    keys = "<tr>{0}</tr>".format("".join([ f"""<td align="center">{x}</td>""" for x in db_cnt.keys() ]))
+    values = "<tr>{0}</tr>".format("".join([ f"""<td align="center">{x}</td>""" for x in db_cnt.values() ]))
+    table.append("""<table border="1">""")
+    table.append(head)
+    table.append(keys)
+    table.append(values)
     table.append("</table>")
 
     body.append("".join( [x for x in table] ))
@@ -139,3 +139,4 @@ def make_html(body):
     html += "</html>"
 
     return html
+

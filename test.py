@@ -1,14 +1,13 @@
 import requests
 
+request_msg = "https://kauth.kakao.com/oauth/authorize?client_id=63dea6379cacab1fddbfce388d30a6bb&redirect_uri=http://54.180.109.216:5000/oauth2/callback&response_type=code"
 
-response = requests.post('https://www.7-eleven.co.kr/product/listMoreAjax.asp', data={
-    "intPageSize": 10, 
-    "intCurrPage":0, 
-    "cateCd1":"", 
-    "cateCd2":"", 
-    "cateCd3":"", 
-    "pTab":1
-}).text
+params = {
+    "client_id": "63dea6379cacab1fddbfce388d30a6bb",
+    "redirect_uri": "http://54.180.109.216:5000/oauth2/callback",
+    "response_type": "code",
+}
+res = requests.get("https://kauth.kakao.com/oauth/authorize", params=params)
 
-
-print(response)
+with open("test.txt", "w") as f:
+    f.write(res.text)

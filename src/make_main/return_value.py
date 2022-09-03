@@ -89,7 +89,7 @@ def return_value_product_like_ranking():
     ]
     return data
 
-def return_value_sns_login_kakao():
+def return_value_sns_login():
     data = [
         '{',
         f"{SPACE}res_code: int,  201 - register successful, 202 - already exist"
@@ -119,8 +119,8 @@ def return_value(flag):
         data = return_value_product_like()
     elif flag == "likeranking":
         data = return_value_product_like_ranking()
-    elif flag == "snsloginkakao":
-        data = return_value_sns_login_kakao()
+    elif flag == "snslogin":
+        data = return_value_sns_login()
 
     for dat in data:
         ret.append(f"<p>{dat}</p>")

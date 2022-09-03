@@ -90,7 +90,7 @@ def params_product_like_ranking(link):
 
     return form
 
-def params_sns_login_kakao(link):
+def params_sns_login(link):
     form = f"""<form action='{link}' method="POST">
         <p>id= <input type='text' name='id'> | type: str</p>
         <p>email= <input type='text' name='email'> | type: str</p>
@@ -99,7 +99,7 @@ def params_sns_login_kakao(link):
 
     return form
 
-def params(flag, args):
+def params(flag, args, login=""):
     ret = []
     ret.append('<button type="button" class="collapsible">params</button>')
     ret.append('<div class="content">')
@@ -120,8 +120,8 @@ def params(flag, args):
         data = params_product_like(args['product_like'])
     elif flag == "likeranking":
         data = params_product_like_ranking(args['like_ranking'])
-    elif flag == "snsloginkakao":
-        data = params_sns_login_kakao(args['sns_login_kakao'])
+    elif flag == "snslogin":
+        data = params_sns_login(args['sns_login'] + login)
 
     ret.append(data)
     ret.append("</div>")

@@ -35,7 +35,7 @@ def setArgs():
         'user_modify'                   : "/api/user/modify",
         'product_like'                  : "/api/product/like",
         'like_ranking'                  : "/api/product/ranking",
-        'sns_login_kakao'               : "/api/register/kakao",
+        'sns_login'                     : "/api/register",
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -168,58 +168,19 @@ def product_like():
 def product_like_ranking():
     return src.getProductLikeList(sql_conn)
 
-@app.route("/api/register/kakao", methods=["POST"])
-def kakao():
-    import pymysql as mysql
-    import jwt
-    import hashlib
-    import os
-    from dotenv import load_dotenv
-
-    load_dotenv()
+@app.route("/api/register/<login>", methods=["POST"])
+def sns_login(login):
+    sns_login_list = ["kakao", "google"]
+    if login not in sns_login_list:
+        return {"res_code": 401, "msg": "not support sns login type"}
 
     try:
         id, email = request.json.get('id'), request.json.get('email')
     except:
         id, email = request.form.get('id'), request.form.get('email')
 
-    sql_conn = mysql
-    sql_conn = sql_conn.connect(
-            host        = 'localhost',   # 루프백주소, 자기자신주소
-            user        = os.environ.get('DB_USER'),        # DB ID      
-            password    = os.environ.get('DB_PW'),    # 사용자가 지정한 비밀번호
-            database    = os.environ.get("DB_DB"),
-            charset     = 'utf8',
-            # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
-        )
-
-    sql = sql_conn.cursor()
-
-    pw = ""
-    for _ in range(int(os.environ.get("SHA_REPEAT"))):
-        pw = hashlib.sha512(pw.encode()).hexdigest()
-
-    payload = {
-        'id': id,
-        'pw': pw,
-        'name': id,
-        'email': email,
-        'login': 'kakao',
-    }
-
-    token = jwt.encode(payload, os.environ.get('JWT_SECRET_KEY'), algorithm=os.environ.get('JWT_ALGO'))
-
-    sql_query = f"""INSERT INTO `{os.environ.get("TABLE_USER")}`(`id`, `pw`, `name`, `email`, `token`, `type`) VALUES ('{id}', '{pw}', '{id}', '{email}', '{token.split(".")[-1]}', "kakao") """
-
-    try:
-        sql.execute(sql_query)
-        sql_conn.commit()
-
-        sql_conn.close()
-    except:
-        return {"res_code": 202, "token": token} # already registed
-
-    return {"res_code": 201, "token": token} # regist success
+    res_data = src.snsLogin(id, email, login)
+    return res_data
 
 if __name__ == '__main__':
     setArgs()

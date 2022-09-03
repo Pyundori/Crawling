@@ -77,10 +77,11 @@ def make_html_body(args):
     body.append(params('likeranking', args))
     body.append(return_value('likeranking'))
     body.append("<hr/>")
-    body.append("<h1>카카오 로그인(API) - POST</h1>")
-    body.append(f"<p>api_url: http://{SERVER_IP}:5000{args['sns_login_kakao']}</p>")
-    body.append(params('snsloginkakao', args))
-    body.append(return_value('snsloginkakao'))
+    body.append("<h1>SNS 로그인(API) - POST</h1>")
+    body.append(f"<p>api_url: http://{SERVER_IP}:5000/api/register/&lt;login&gt;</p>")
+    body.append("html상에서는 폼 구현 불가. REST 사용하여 요청.")
+    body.append(params('snslogin', args))
+    body.append(return_value('snslogin'))
 
     return body
 

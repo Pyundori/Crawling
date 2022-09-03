@@ -72,9 +72,12 @@ def toDatabase(sql_conn):
     datas_main, datas_like = [], []
 
     for key, func in api_func.items():
-        data = func(os.environ.get(api_path[key]))
-        datas_main += makeSQLDatas_main(data, key)
-        datas_like += makeSQLDatas_like(data, key)
+        try:
+            data = func(os.environ.get(api_path[key]))
+            datas_main += makeSQLDatas_main(data, key)
+            datas_like += makeSQLDatas_like(data, key)
+        except:
+            raise ValueError(f"""error on while {key} crawling""")
 
     sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
 

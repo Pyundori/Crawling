@@ -121,7 +121,7 @@ def return_value(flag):
         data = return_value_product_like()
     elif flag == "likeranking":
         data = return_value_product_like_ranking()
-    elif flag == "snslogin":
+    elif flag == "kakaologin" or flag == "googlelogin":
         data = return_value_sns_login()
 
     for dat in data:

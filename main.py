@@ -35,7 +35,7 @@ def setArgs():
         'user_modify'                   : "/api/user/modify",
         'product_like'                  : "/api/product/like",
         'like_ranking'                  : "/api/product/ranking",
-        'sns_login'                     : "/api/register",
+        'kakao_login'                   : "/kakao/oauth2/callback",
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -168,25 +168,14 @@ def product_like():
 def product_like_ranking():
     return src.getProductLikeList(sql_conn)
 
-@app.route("/api/register/<login>", methods=["POST"])
-def sns_login(login):
-    sns_login_list = ["kakao", "google"]
-    if login not in sns_login_list:
-        return {"res_code": 401, "msg": "not support sns login type"}
-
-    try:
-        id, email = request.json.get('id'), request.json.get('email')
-    except:
-        id, email = request.form.get('id'), request.form.get('email')
-
-    res_data = src.snsLogin(id, email, login)
-    return res_data
-
 @app.route("/kakao/oauth2/callback", methods=["GET", "POST"])
 def kakao_auth():
     import requests
 
-    token = request.json.get('token')
+    try:
+        token = request.json.get('token')
+    except:
+        token = request.form.get('token')
     url = 'https://kapi.kakao.com/v2/user/me'
 
     headers = {

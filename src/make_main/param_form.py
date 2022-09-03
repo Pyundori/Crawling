@@ -92,8 +92,7 @@ def params_product_like_ranking(link):
 
 def params_sns_login(link):
     form = f"""<form action='{link}' method="POST">
-        <p>id= <input type='text' name='id'> | type: str</p>
-        <p>email= <input type='text' name='email'> | type: str</p>
+        <p>token= <input type='text' name='token'> | type: str</p>
         <p><input type='submit' value='제출'></p>
         </form>"""
 
@@ -120,8 +119,8 @@ def params(flag, args, login=""):
         data = params_product_like(args['product_like'])
     elif flag == "likeranking":
         data = params_product_like_ranking(args['like_ranking'])
-    elif flag == "snslogin":
-        data = params_sns_login(args['sns_login'] + login)
+    elif flag == "kakaologin":
+        data = params_sns_login(args['kakao_login'])
 
     ret.append(data)
     ret.append("</div>")

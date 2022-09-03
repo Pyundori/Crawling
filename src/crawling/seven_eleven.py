@@ -38,11 +38,10 @@ def POSTRequestAPI_SevenEleven(url):
             for li_item in soup.select("li"):
                 gift = None
                 try:
-                    product_data = li_item.select(".pic_product")[0].strip()
-                    product_name = product_data.select(".name")[0].text
-                    product_price = product_data.select(".price")[0].select("span")[0].text.replace(",", "")
+                    product_name = li_item.select(".name")[0].text
+                    product_price = li_item.select(".price")[0].select("span")[0].text.replace(",", "")
                     product_price = int(product_price)
-                    product_img = "https://www.7-eleven.co.kr" + product_data.select(".pic_product")[0].find("img")['src']
+                    product_img = "https://www.7-eleven.co.kr" + li_item.find("img")['src']
 
                     tabs[product_name] = {'price': product_price, 'img': product_img, 'gift': gift}
                     
@@ -59,3 +58,5 @@ if __name__ == "__main__":
     for leg, products in datas.items():
         for product, data in products.items():
             print(product, data)
+
+    print(len(datas))

@@ -92,8 +92,10 @@ def return_value_product_like_ranking():
 def return_value_sns_login():
     data = [
         '{',
-        f"{SPACE}res_code: int,  201 - register successful, 202 - already exist"
-        f"{SPACE}token: str",
+        f"{SPACE}res_code: int,  201 - register successful, 202 - already exist",
+        f"{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}400 - sql error, 401 - not support sns login type",
+        f"{SPACE}if res_code == 201 or 202 => token: str",
+        f"{SPACE}else => msg: str",
         "}",
     ]
     return data

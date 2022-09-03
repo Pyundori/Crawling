@@ -134,3 +134,4 @@ nohup.out
 test.py
 
 templates/
+crontab_logs

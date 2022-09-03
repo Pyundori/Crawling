@@ -38,6 +38,7 @@ def POSTRequestAPI_SevenEleven(url):
             for li_item in soup.select("li"):
                 gift = None
                 try:
+                    #
                     product_name = li_item.select(".name")[0].text
                     product_price = li_item.select(".price")[0].select("span")[0].text.replace(",", "")
                     product_price = int(product_price)

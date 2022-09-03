@@ -44,7 +44,7 @@ def setArgs():
 
 @app.route("/")
 def main():
-    body = src.make_html_body(args)
+    body = src.make_html_body(args, vender_api)
     html = src.make_html(body)
 
     return f"""{html}"""

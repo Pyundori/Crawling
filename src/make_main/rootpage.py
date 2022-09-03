@@ -25,8 +25,46 @@ def make_form_query_table(link):
         </form>"
     return form
 
-def make_html_body(args):
+def crawled_status(vender_api):
+    import pymysql as mysql
+    sql_conn = mysql
+    sql_conn = sql_conn.connect(
+            host        = 'localhost',   # 루프백주소, 자기자신주소
+            user        = os.environ.get('DB_USER'),        # DB ID      
+            password    = os.environ.get('DB_PW'),    # 사용자가 지정한 비밀번호
+            database    = os.environ.get('DB_DB'),
+            charset     = 'utf8',
+            # cursorclass = sql.cursors.DictCursor #딕셔너리로 받기위한 커서
+        )
+
+    sql = sql_conn.cursor()
+    ret_val = {}
+    for key in vender_api.keys():
+        sql_query = f"""SELECT COUNT(*) FROM {os.environ.get("TABLE_CRAWLING")} WHERE `vender`='{key}'""" + ";"
+        sql.execute(sql_query)
+
+        cnt = sql.fetchone()[0]
+        ret_val[key] = cnt
+        
+    sql_conn.close()
+    
+    return ret_val
+
+def make_html_body(args, vender_api):
     body = []
+    table = []
+
+    db_cnt = crawled_status(vender_api)
+    table.append(f"""<table align = "center" border="1">""")
+    table.append("<tr>")
+    table.append("".join([ f"""<td>{x}</td>""" for x in db_cnt.keys() ]))
+    table.append("</tr>")
+    table.append("<tr>")
+    table.append("".join([ f"""<td>{x}</td>""" for x in db_cnt.values() ]))
+    table.append("</tr>")
+    table.append("</table>")
+
+    body.append("".join( [x for x in table] ))
 
     body.append("<h1>편의점 서버에서 바로 데이터 받아서 테이블로 출력</h1>")
     body.append(make_link(args['from_server']))

@@ -184,8 +184,27 @@ def kakao_auth():
     res = requests.get(url, headers=headers).json()
 
     id, email = res['id'], res['kakao_account']['email']
-    res_data = src.snsLogin(id, email, 'kakao')
+    name = email.split("@")[0]
 
+    res_data = src.snsLogin(id, name, email, 'kakao')
+    return res_data
+
+@app.route("/google/oauth2/callback")
+def google_auth():
+    from google.oauth2 import id_token
+    from google.auth.transport import requests
+    try:
+        token = request.json.get("token")
+    except:
+        token = request.form.get("token")
+
+    CLIENT_ID = os.environ.get("GOOGLE_CILENT_ID")
+    idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+
+    name, email = idinfo["name"], idinfo["email"] # email을 id로?
+    id = email.split("@")[0]
+
+    res_data = src.snsLogin(id, name, email, 'google')
     return res_data
 
 

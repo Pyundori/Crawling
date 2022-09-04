@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def snsLogin(id, email, login):
+def snsLogin(id, name, email, login):
     sql_conn = mysql
     sql_conn = sql_conn.connect(
             host        = 'localhost',   # 루프백주소, 자기자신주소
@@ -25,14 +25,14 @@ def snsLogin(id, email, login):
     payload = {
         'id': id,
         'pw': pw,
-        'name': id,
+        'name': name,
         'email': email,
         'login': login,
     }
 
     token = jwt.encode(payload, os.environ.get('JWT_SECRET_KEY'), algorithm=os.environ.get('JWT_ALGO'))
 
-    sql_query = f"""INSERT INTO `{os.environ.get("TABLE_USER")}`(`id`, `pw`, `name`, `email`, `token`, `type`) VALUES ('{id}', '{pw}', '{id}', '{email}', '{token.split(".")[-1]}', '{login}') """
+    sql_query = f"""INSERT INTO `{os.environ.get("TABLE_USER")}`(`id`, `pw`, `name`, `email`, `token`, `type`) VALUES ('{id}', '{pw}', '{name}', '{email}', '{token.split(".")[-1]}', '{login}') """
 
     try:
         sql.execute(sql_query)

@@ -121,6 +121,8 @@ def params(flag, args, login=""):
         data = params_product_like_ranking(args['like_ranking'])
     elif flag == "kakaologin":
         data = params_sns_login(args['kakao_login'])
+    elif flag == "googlelogin":
+        data = params_sns_login(args['google_login'])
 
     ret.append(data)
     ret.append("</div>")

@@ -36,6 +36,7 @@ def setArgs():
         'product_like'                  : "/api/product/like",
         'like_ranking'                  : "/api/product/ranking",
         'kakao_login'                   : "/kakao/oauth2/callback",
+        'google_login'                  : "/google/oauth2/callback",
     }
 
     args['from_server'] = [ path for path in vender_api.keys() ]
@@ -182,14 +183,16 @@ def kakao_auth():
         "Authorization": f"""Bearer {token}"""
     }
     res = requests.get(url, headers=headers).json()
-
-    id, email = res['id'], res['kakao_account']['email']
-    name = email.split("@")[0]
+    try:
+        id, email = res['id'], res['kakao_account']['email']
+        name = email.split("@")[0]
+    except:
+        return {"res_code": 400, "msg": "invalid token"}
 
     res_data = src.snsLogin(id, name, email, 'kakao')
     return res_data
 
-@app.route("/google/oauth2/callback")
+@app.route("/google/oauth2/callback", methods=["GET", "POST"])
 def google_auth():
     from google.oauth2 import id_token
     from google.auth.transport import requests
@@ -199,7 +202,10 @@ def google_auth():
         token = request.form.get("token")
 
     CLIENT_ID = os.environ.get("GOOGLE_CILENT_ID")
-    idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+    except:
+        return {"res_code": 400, "msg": "invalid token"}
 
     name, email = idinfo["name"], idinfo["email"] # email을 id로?
     id = email.split("@")[0]

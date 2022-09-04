@@ -26,8 +26,8 @@ args = {}
 def setArgs():   
     global args 
     args = {
-        'from_db_select_query'          : "/api/product_query",
-        'from_db_select_query_table'    : "/api/product_query/table",
+        'from_db_select_query'          : "/api/product/query",
+        'from_db_select_query_table'    : "/api/product/query/table",
         'check_dup'                     : "/api/user/check_dup",
         'sign_up'                       : "/api/user/signup",
         'sign_in'                       : "/api/user/signin",
@@ -78,7 +78,7 @@ def print_table_from_db(vender):
 
     return "".join(table)
 
-@app.route("/api/product_query", methods=["GET"])
+@app.route("/api/product/query", methods=["GET"])
 def product_query():
     datas = src.GETCustomProductQuery(sql_conn, request.args)
 

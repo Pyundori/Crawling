@@ -1,4 +1,4 @@
-api 주소 : ec2-3-37-141-210.ap-northeast-2.compute.amazonaws.com:5000
+api 주소 : py.pyeondori.kro.kr:5000
 
 ***
 

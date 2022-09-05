@@ -198,18 +198,23 @@ def kakao_auth():
 
 @app.route("/google/oauth2/callback", methods=["GET", "POST"])
 def google_auth():
-    from google.oauth2 import id_token
-    from google.auth.transport import requests
+    # from google.oauth2 import id_token
+    # from google.auth.transport import requests
+
+    import requests
     try:
         token = request.json.get("token")
     except:
         token = request.form.get("token")
 
     CLIENT_ID = os.environ.get("GOOGLE_CILENT_ID")
-    try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-    except:
-        return {"res_code": 400, "msg": "invalid token"}
+    params = {
+        "alt": "json",
+        "access_token": token
+    }
+
+    data = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", params=params)
+    idinfo = data.json()
 
     name, email = idinfo["name"], idinfo["email"] # email을 id로?
     id = email.split("@")[0]

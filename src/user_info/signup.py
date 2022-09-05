@@ -37,7 +37,7 @@ def checkDuplicated(column, data):
     return 202
 
 def signUp(args):
-    id, pw, name, email = args.get('id'), args.get('pw'), args.get('name'), args.get('email')
+    id, pw, name = args.get('id'), args.get('pw'), args.get('name')
 
     for _ in range(int(os.environ.get("SHA_REPEAT"))):
         pw = hashlib.sha512(pw.encode()).hexdigest()
@@ -46,7 +46,6 @@ def signUp(args):
         'id': id,
         'pw': pw,
         'name': name,
-        'email': email,
         'login': 'local',
     }
 
@@ -58,7 +57,7 @@ def signUp(args):
 
     sql = sql_conn.cursor()
     try:
-        sql_query = f"INSERT INTO `{os.environ.get('TABLE_USER')}`(id, pw, name, email, `token`) VALUES ('{id}', '{pw}', '{name}', '{email}', '{token}')"
+        sql_query = f"INSERT INTO `{os.environ.get('TABLE_USER')}`(id, pw, name, `token`) VALUES ('{id}', '{pw}', '{name}', '{token}')"
 
         sql.execute(sql_query)
         sql_conn.commit()

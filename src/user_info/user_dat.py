@@ -52,21 +52,18 @@ def getUserDat(args):
             'res_code': 400,
             'id': "",
             'name': "",
-            'email': "",
             'login': "",
         }
         return res
 
     id = payload.get('id')
     name = payload.get('name')
-    email = payload.get('email')
     login = payload.get('login')
 
     res = {
         'res_code': 201,
         'id': id,
         'name': name,
-        'email': email,
         'login': login,
     }
 
@@ -94,7 +91,7 @@ def modifyUserDat(sql_conn, args): # put
     if not valid:
         return {"res_code": 500, "token": token} # invalid token
 
-    if col != "email" and col != "pw":
+    if col != "pw" or col != "name":
         return {"res_code": 400, "token": token}
 
     if col == "pw":

@@ -39,7 +39,6 @@ def params_signup(link):
         <p>id= <input type='text' name='id'>  | type: str, max len: 20</p>
         <p>pw= <input type='text' name='pw'></p>
         <p>name= <input type='text' name='name'>  | type: str, max len: 20(kor: 10)</p>
-        <p>email= <input type='text' name='email'>  | type: str, max len: 50</p>
         <p><input type='submit' value='제출'></p>
         </form>"""
 

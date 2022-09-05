@@ -42,6 +42,12 @@ def snsLogin(id, name, email, login):
     except mysql.err.OperationalError:
         return {"res_code": 400, "msg": "sql error"}
     except:
-        return {"res_code": 202, "token": token} # already registed
+
+        sql_query = f"""UPDATE `{os.environ.get("TABLE_USER")}` SET `name`='{name}' WHERE `id`='{id}'"""
+        sql.execute(sql_query)
+        sql_conn.commit()
+
+        sql_conn.close()
+        # return {"res_code": 202, "token": token} # already registed
 
     return {"res_code": 201, "token": token} # regist success

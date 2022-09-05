@@ -186,11 +186,11 @@ def kakao_auth():
     res = requests.get(url, headers=headers).json()
     try:
         id = res['id']
+        name = res['kakao_account']['profile']['nickname']
         email = res['kakao_account']['email']
-        name = email.split("@")[0]
     except:
         email = "a@a.a"
-        name = id
+        name = res['id'] # 임시조치
         # return {"res_code": 400, "msg": "invalid token"}
 
     res_data = src.snsLogin(id, name, email, 'kakao')

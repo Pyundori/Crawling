@@ -53,7 +53,6 @@ def return_value_user_data():
         f'{SPACE}res_code: int - 201: token valid, 400: token invalid',
         f'{SPACE}id: str',
         f'{SPACE}name: str',
-        f'{SPACE}email: str',
         "}",
     ]
     return data

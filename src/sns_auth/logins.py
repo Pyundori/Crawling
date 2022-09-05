@@ -26,13 +26,12 @@ def snsLogin(id, name, email, login):
         'id': id,
         'pw': pw,
         'name': name,
-        'email': email,
         'login': login,
     }
 
     token = jwt.encode(payload, os.environ.get('JWT_SECRET_KEY'), algorithm=os.environ.get('JWT_ALGO'))
 
-    sql_query = f"""INSERT INTO `{os.environ.get("TABLE_USER")}`(`id`, `pw`, `name`, `email`, `token`, `type`) VALUES ('{id}', '{pw}', '{name}', '{email}', '{token.split(".")[-1]}', '{login}') """
+    sql_query = f"""INSERT INTO `{os.environ.get("TABLE_USER")}`(`id`, `pw`, `name`, `token`, `type`) VALUES ('{id}', '{pw}', '{name}', '{token.split(".")[-1]}', '{login}') """
 
     try:
         sql.execute(sql_query)

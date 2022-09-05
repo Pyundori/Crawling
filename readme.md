@@ -74,6 +74,14 @@ nohup 사용
 
         kill -9 <pid> : 해당 pid 가진 프로세스 종료
 
+
+권한이 갑자기 사라졌을 때
+
+	1. 토큰 발행
+	2. git remote set-url origin https://{토큰}@github.com/{깃허브이름}/{repost이름}.git
+	3. git push
+
+
 ***
 
 TODO - 2022.08.23
@@ -85,3 +93,4 @@ TODO - 2022.08.26
 
 	로그인 구현
 	로그인 테스트 폼 생성
+

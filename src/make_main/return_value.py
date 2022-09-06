@@ -31,7 +31,8 @@ def return_value_dup():
 def return_value_signup():
     data = [
         '{',
-        f'{SPACE}res_code: int - 201: append user to DB, 500: duplicate id/name/email in DB',
+        f'{SPACE}res_code: int - 201: append user to DB, 500: duplicate id/name in DB',
+        f'{SPACE}token: str',
         "}",
     ]
     return data

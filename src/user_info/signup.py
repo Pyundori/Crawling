@@ -50,23 +50,23 @@ def signUp(args):
     }
 
     token = jwt.encode(payload, os.environ.get("JWT_SECRET_KEY"), algorithm=os.environ.get('JWT_ALGO'))
-    token = token.split(".")[-1]
+    token_valid = token.split(".")[-1]
 
     sql_conn = mysql
     sql_conn = SQLConnection(sql_conn, os.environ.get('DB_DB'))
 
     sql = sql_conn.cursor()
     try:
-        sql_query = f"INSERT INTO `{os.environ.get('TABLE_USER')}`(id, pw, name, `token`) VALUES ('{id}', '{pw}', '{name}', '{token}')"
+        sql_query = f"INSERT INTO `{os.environ.get('TABLE_USER')}`(id, pw, name, `token`) VALUES ('{id}', '{pw}', '{name}', '{token_valid}')"
 
         sql.execute(sql_query)
         sql_conn.commit()
     except:
-        return {'res_code': 500} # same data in db, insert error
+        return {'res_code': 500, 'token': ''} # same data in db, insert error
 
     sql_conn.close()
 
-    return {'res_code': 201} # data insert success
+    return {'res_code': 201, 'token': token} # data insert success
 
 if __name__ == "__main__":
     print(checkDuplicated('id', 'asdf'))

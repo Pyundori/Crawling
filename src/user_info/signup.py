@@ -62,10 +62,12 @@ def signUp(args):
         sql.execute(sql_query)
         sql_conn.commit()
     except:
+        return {'res_code': 500} # same data in db, insert error
         return {'res_code': 500, 'token': ''} # same data in db, insert error
 
     sql_conn.close()
 
+    return {'res_code': 201} # data insert success
     return {'res_code': 201, 'token': token} # data insert success
 
 if __name__ == "__main__":

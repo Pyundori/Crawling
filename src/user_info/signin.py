@@ -94,7 +94,7 @@ def signIn(args):
         if not isInDB(token):
             return {'res_code': 502, 'token': ""} # invalid token
 
-        return {'res_code': 202, 'token': token} # valid token
+        return {'res_code': 201, 'token': token} # valid token. login with token
     
     if checkDuplicated('id', id) == 201:
         return {'res_code': 500, 'token': ""} # not in database
@@ -111,4 +111,4 @@ def signIn(args):
 
     token = createJWT(row[0], row[1], row[2], row[3])
 
-    return {'res_code': 201, 'token': token} # login
+    return {'res_code': 201, 'token': token} # login with id/pw

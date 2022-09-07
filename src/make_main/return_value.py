@@ -32,7 +32,7 @@ def return_value_signup():
     data = [
         '{',
         f'{SPACE}res_code: int - 201: append user to DB, 500: duplicate id/name in DB',
-        f'{SPACE}token: str',
+        # f'{SPACE}token: str',
         "}",
     ]
     return data
@@ -42,7 +42,7 @@ def return_value_signin():
         '{',
         f'{SPACE}res_code: int - 500: No user with id in DB, 501: PW isn\'t correct',
         f'{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}502: invalid token',
-        f'{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}201: login success, 202: valid token',
+        f'{SPACE}{SPACE}{SPACE}{SPACE}{SPACE}201: login success',
         f'{SPACE}token: "" - return when login failed, jwt_tolen - return when login success',
         "}",
     ]

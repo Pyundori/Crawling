@@ -48,10 +48,10 @@ def params_signin(link):
     form = f"""<form action='{link}' method='POST'>
         <p>id= <input type='text' name='id'>  | type: str</p>
         <p>pw= <input type='text' name='pw'>  | type: str</p>
-        <p>token= <input type='text' name='token'>  | type: str</p>
+        
         <p><input type='submit' value='제출'></p>
         </form>"""
-
+    #<p>token= <input type='text' name='token'>  | type: str</p>
     return form
     
 def params_user_data(link):

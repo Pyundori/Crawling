@@ -86,7 +86,7 @@ def signIn(args):
     pw = args.get('pw')
     token = args.get('token')
 
-    if token != "":
+    """     if token != "":
 
         if not isValidToken(token):
             return {'res_code': 502, 'token': ""} # invalid token
@@ -94,7 +94,7 @@ def signIn(args):
         if not isInDB(token):
             return {'res_code': 502, 'token': ""} # invalid token
 
-        return {'res_code': 201, 'token': token} # valid token. login with token
+        return {'res_code': 201, 'token': token} # valid token. login with token """
     
     if checkDuplicated('id', id) == 201:
         return {'res_code': 500, 'token': ""} # not in database

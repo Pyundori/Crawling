@@ -135,3 +135,5 @@ test.py
 
 templates/
 crontab_logs
+
+environment.js

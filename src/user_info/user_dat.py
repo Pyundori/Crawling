@@ -91,7 +91,7 @@ def modifyUserDat(sql_conn, args): # put
     if not valid:
         return {"res_code": 500, "token": token} # invalid token
 
-    if col != "pw" or col != "name":
+    if col != "pw" and col != "name":
         return {"res_code": 400, "token": token}
 
     if col == "pw":

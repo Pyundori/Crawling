@@ -6,7 +6,7 @@ import json
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(override=True)
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -221,6 +221,17 @@ def google_auth():
 
     res_data = src.snsLogin(id, name, email, 'google')
     return res_data
+
+@app.get("/test/get-all-data")
+def get_all_data():
+    datas = {}
+    for vender, api in vender_api.items():
+        try:
+            datas += api['api'](os.environ.get(api['path']))
+        except:
+            None
+        
+    return datas
 
 
 if __name__ == '__main__':

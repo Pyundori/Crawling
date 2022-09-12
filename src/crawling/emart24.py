@@ -12,7 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def GETRequestAPI_Emart24(url):
-    img_path = 'https://www.emart24.co.kr'
+    # img_path = 'https://www.emart24.co.kr'
+    img_path = 'http://www.emart24.co.kr' # ssl 미적용 해야할 때 사용
 
     datas = {}
 

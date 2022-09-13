@@ -222,7 +222,7 @@ def google_auth():
     res_data = src.snsLogin(id, name, email, 'google')
     return res_data
 
-@app.get("/test/get-all-data")
+@app.route("/test/get-all-data")
 def get_all_data():
     datas = {}
     for vender, api in vender_api.items():
@@ -232,6 +232,14 @@ def get_all_data():
             None
         
     return datas
+
+""" @app.route("/test/list-args", methods=["GET"])
+def list_args():
+    import re
+    venders = request.args.get("datas")
+    venders = re.sub("[\"\'\s\[\]]", "", venders)
+    venders = venders.replace(",", "|")
+    return venders """
 
 
 if __name__ == '__main__':

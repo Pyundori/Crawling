@@ -207,13 +207,14 @@ def google_auth():
     except:
         token = request.form.get("token")
 
-    CLIENT_ID = os.environ.get("GOOGLE_CILENT_ID")
+    # CLIENT_ID = os.environ.get("GOOGLE_CILENT_ID")
     params = {
         "alt": "json",
         "access_token": token
     }
 
     data = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", params=params)
+
     idinfo = data.json()
 
     name, email = idinfo["name"], idinfo["email"] # email을 id로?

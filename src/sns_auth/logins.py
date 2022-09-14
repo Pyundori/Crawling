@@ -36,17 +36,14 @@ def snsLogin(id, name, email, login):
     try:
         sql.execute(sql_query)
         sql_conn.commit()
-
-        sql_conn.close()
-    # except mysql.err.OperationalError:
-    #     return {"res_code": 400, "msg": "sql error"}
+    except mysql.err.OperationalError:
+        return {"res_code": 400, "msg": "sql error"}
     except:
-
-        sql_query = f"""UPDATE `{os.environ.get("TABLE_USER")}` SET `name`='{name}', `token`="{token.split(".")[-1]}" WHERE `id`='{id}' AND `type`="{login}"""
+        sql_query = f"""UPDATE `{os.environ.get("TABLE_USER")}` SET `name`='{name}', `token`="{token.split(".")[-1]}" WHERE `id`='{id}' AND `type`='{login}'"""
         sql.execute(sql_query)
         sql_conn.commit()
-
-        sql_conn.close()
         # return {"res_code": 202, "token": token} # already registed
+    finally:
+        sql_conn.close()
 
     return {"res_code": 201, "token": token} # regist success

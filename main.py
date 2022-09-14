@@ -82,17 +82,19 @@ def print_table_from_db(vender):
 def product_query():
     datas = src.GETCustomProductQuery(sql_conn, request.args)
 
-    temp = [ {
+    ret_data = [ {
         'vender': x[0],
         'dType': x[1],
         'pName': x[2],
         'pPrice': x[3],
         'pImg': x[4],
+        'gName': x[5],
+        'gImg': x[7],
     } for x in datas['row'] ]
 
-    res_code = 201 if len(temp) > 0 else 202
+    res_code = 201 if len(ret_data) > 0 else 202
     ret_data = {
-        'data': temp,
+        'data': ret_data,
         'data_cnt': datas['cnt'],
         'response_code': res_code,
     }

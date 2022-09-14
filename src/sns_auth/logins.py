@@ -42,7 +42,7 @@ def snsLogin(id, name, email, login):
     #     return {"res_code": 400, "msg": "sql error"}
     except:
 
-        sql_query = f"""UPDATE `{os.environ.get("TABLE_USER")}` SET `name`='{name}' WHERE `id`='{id}' AND `type`="{login}"""
+        sql_query = f"""UPDATE `{os.environ.get("TABLE_USER")}` SET `name`='{name}', `token`="{token.split(".")[-1]}" WHERE `id`='{id}' AND `type`="{login}"""
         sql.execute(sql_query)
         sql_conn.commit()
 

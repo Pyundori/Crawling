@@ -1,0 +1,35 @@
+# 서버 주소
+SERVER_IP="py.pyundori.kro.kr"
+
+# DB 계정
+DB_USER=
+DB_PW=
+DB_DB=
+
+# DB 내 테이블
+TABLE_CRAWLING=
+TABLE_LIKE=
+TABLE_USER=
+
+# 크롤링 데이터 서버 주소
+URL_GS25=
+URL_SE=
+URL_CU=
+URL_EMART24=
+URL_MINISTOP=
+
+URL_MINISTOP_IMG=
+
+# 비밀번호에 SHA 적용할 때 몇 번 적용할 것인가?
+SHA_REPEAT=
+
+# JWT 이용 시 SECRET_KEY 설정
+JWT_SECRET_KEY=
+JWT_ALGO=
+
+# KAKAO LOGIN API
+KAKAO_APP_ID=
+KAKAO_REST_KEY=
+
+# GOOGLE LOGIN API
+GOOGLE_CILENT_ID=
